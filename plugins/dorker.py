@@ -6,7 +6,7 @@
 """
 
 ### Imports
-from resources import IOhandler
+from resources.iohandler import *
 ###
 
 __all__ = ["dorker"]

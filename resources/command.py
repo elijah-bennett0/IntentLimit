@@ -2,8 +2,8 @@
 """
 @Description		: IntentLimit override for Python CMD
 @Author			: Ginsu
-@Date			: 6/21/22
-@Version		: 2.0
+@Date			: 20230115
+@Version		: 2.2
 """
 
 ### Imports
@@ -14,6 +14,7 @@ from context import *
 from iohandler import *
 from exception import *
 from pluginManager import *
+from integrityCheck import readConfig
 ###
 
 __all__ = ["ILCMD"]
@@ -147,10 +148,10 @@ class ILCMD(cmd.Cmd):
 	def do_use(self, arg):
 		"""Use A Specified Plugin Or Tool"""
 		if arg in loadedPlugins:
-			func = loadedPlugins[arg]
+			func = loadedPlugins[arg][0]
 			func()
 		elif arg in loadedTools:
-			func = loadedTools[arg]
+			func = loadedTools[arg][0]
 			func()
 		else:
 			self.help_use()
@@ -276,6 +277,27 @@ class ILCMD(cmd.Cmd):
 				cmds = self.get_help_lists(self.ctx.getNames(), self.ctx)
 				cmdlist = {"title":"%s Commands"%self.ctx.getType(),"commands":cmds}
 				self.io.print_cmd_list(cmdlist)
+
+	"""
+	Info Command
+	"""
+	def help_info(self):
+		usage = ["info [tool name][plugin name]",
+			"Show relevant info about a tool or plugin"]
+		self.io.print_usage(usage)
+
+	def do_info(self, name):
+		"""Show Information About A Tool Or Plugin"""
+		if name in loadedTools:
+			path = loadedTools[name][1]
+			config = readConfig(path)
+			self.io.Print('i', "{} : {}".format(name, config['description']))
+		elif name in loadedPlugins:
+			self.io.Print('f', "Info doesn't support plugins yet.")
+		elif name not in loadedPlugins and name not in loadedTools and name != '':
+			self.io.Print('f', "Couldn't find info about {}".format(name))
+		else:
+			self.help_info()
 
 	def parseLine(self, line):
 		line = line.strip()

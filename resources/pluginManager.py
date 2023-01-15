@@ -2,8 +2,8 @@
 """
 @Description		: Manages plug-in scripts from /plugins
 @Author			: Ginsu
-@Date			: 6/16/22
-@Version		: 1.3
+@Date			: 20230115
+@Version		: 1.5
 """
 
 ### Imports
@@ -46,26 +46,29 @@ class Manager():
 
 					self.handler.Print('f', "Could Not Load: %s" % name)
 					self.handler.Print('c', str(e))
-		self.handler.Print('s', "Loaded {} plugin(s)\n".format(len(loadedPlugins)))
+		self.handler.Print('s', "Loaded {} plugin(s)".format(len(loadedPlugins)))
 
 	def loadTools(self):
+		self.handler.Print('i', "Loading tools...")
 		categories = os.listdir(self.toolDir)
+		numTools = 0
 		for category in categories:
 			toolNames = os.listdir(os.path.join(self.toolDir, category))
 			for toolName in toolNames:
 				tools = [x for x in os.listdir(os.path.join(self.toolDir, category, toolName)) if os.path.splitext(x)[1] in self.supported and "init" not in x and "template" not in x]
-				self.handler.Print('i', "Found {} tool(s)".format(len(toolNames)))
-				self.handler.Print('i', "Loading tools...")
+				numTools += 1
 				for tool in tools:
 					if os.path.splitext(tool)[1] == '.py':
 						try:
 							name, t = os.path.splitext(tool)
 							#print(os.getcwd())
 							module = getattr(__import__(name, fromlist=[name]), name)
-							loadedTools[name] = module
+							configPath = os.path.join(self.toolDir, category, toolName, "config.yaml")
+							loadedTools[name] = [module, configPath]
 						except Exception as e:
 							self.handler.Print('f', "Could Not Load: %s" % name)
 							self.handler.Print('c', str(e))
+		self.handler.Print('i', "Found {} tool(s)".format(numTools))
 		self.handler.Print('s', "Loaded {} tool(s)\n".format(len(loadedTools)))
 
 	def createPlugin(self, arg):

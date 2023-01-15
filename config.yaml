@@ -1,0 +1,50 @@
+---
+default_dirs:
+ .:
+  - config.yaml
+ resources:
+  - banner.py
+  - banners.txt
+  - command.py
+  - context.py
+  - env.py
+  - exception.py
+  - ilcmd.py
+  - integrityCheck.py
+  - iohandler.py
+  - pluginManager.py
+  - template.py
+  - __init__.py
+
+ plugins:
+  - __init__.py
+  - bin_analysis.py
+  - dorker.py
+  - msf_basic.py
+  - pack_cap.py
+  - sweep.sh
+  - template.py
+  - tunnel.py
+
+ tools:
+  analysis:
+   - SpiffySpark
+  exploitation:
+   - ColdHeart
+   - CrazyIngrate
+   - GoldenBullet
+  modeling:
+   - MistyRelay
+  post:
+   - HappyBond
+  recon:
+   - ConveneJudgement
+  reporting:
+   - WryDame
+  reverseshell:
+   - ShallowDawn
+
+description: "A toolbox able to launch ctrlaltech tools quick and easy."
+name: IntentLimit
+type: IntentLimit
+version: 2.0

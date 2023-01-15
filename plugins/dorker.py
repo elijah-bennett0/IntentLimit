@@ -36,7 +36,7 @@ def dorker():
 		name = input("Name: ")
 		string = ops[option] + name
 
-	stat, msg = 's', "Enter this string into Google:\n\t=> {}".format(string))
+	stat, msg = 's', "Enter this string into Google:\n\t=> {}".format(string)
 	return {'status':stat, 'msg':msg}
 ###
 

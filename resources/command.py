@@ -150,7 +150,8 @@ class ILCMD(cmd.Cmd):
 			func = loadedPlugins[arg]
 			func()
 		elif arg in loadedTools:
-			pass
+			func = loadedTools[arg]
+			func()
 		else:
 			self.help_use()
 
@@ -168,7 +169,8 @@ class ILCMD(cmd.Cmd):
 			for p in loadedPlugins:
 				self.io.Print('s', "Loaded: %s" % p)
 		elif arg == 'tools':
-			pass
+			for t in loadedTools:
+				self.io.Print('s', "Loaded: %s" % t)
 		else:
 			self.help_show()
 

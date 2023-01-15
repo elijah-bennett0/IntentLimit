@@ -2,8 +2,8 @@
 """
 @Description		: CTRLALTECH Main Toolbox
 @Author			: Ginsu
-@Date			: 6/22/22
-@Version		: 2.0
+@Date			: 2023014
+@Version		: 2023.0.1
 """
 
 ### Imports
@@ -25,6 +25,13 @@ IL_CONFIG    = os.path.join(IL_DIR, "config.yaml")
 addPath(RESOURCE_DIR)
 addPath(PLUGIN_DIR)
 addPath(TOOL_DIR)
+
+# This is to add the path of each tool individually.
+# Did this because the __import__ method was not working with tool loading.
+# Maybe find a more elegant way to do this?
+for cat in os.listdir(TOOL_DIR):
+	for tool in os.listdir(os.path.join(TOOL_DIR, cat)):
+		addPath(os.path.join(TOOL_DIR, cat, tool))
 ###
 
 ### Local Imports

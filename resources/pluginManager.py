@@ -1,4 +1,3 @@
-
 # -*- coding: utf-8 -*-
 """
 @Description		: Manages plug-in scripts from /plugins
@@ -40,15 +39,34 @@ class Manager():
 			if os.path.splitext(plugin)[1] == '.py':
 				try:
 					name, t = os.path.splitext(plugin)
+					#print(os.getcwd())
 					module = getattr(__import__(name, fromlist=[name]), name)
 					loadedPlugins[name] = module
 				except Exception as e:
+
 					self.handler.Print('f', "Could Not Load: %s" % name)
 					self.handler.Print('c', str(e))
 		self.handler.Print('s', "Loaded {} plugin(s)\n".format(len(loadedPlugins)))
 
 	def loadTools(self):
-		pass
+		categories = os.listdir(self.toolDir)
+		for category in categories:
+			toolNames = os.listdir(os.path.join(self.toolDir, category))
+			for toolName in toolNames:
+				tools = [x for x in os.listdir(os.path.join(self.toolDir, category, toolName)) if os.path.splitext(x)[1] in self.supported and "init" not in x and "template" not in x]
+				self.handler.Print('i', "Found {} tool(s)".format(len(toolNames)))
+				self.handler.Print('i', "Loading tools...")
+				for tool in tools:
+					if os.path.splitext(tool)[1] == '.py':
+						try:
+							name, t = os.path.splitext(tool)
+							#print(os.getcwd())
+							module = getattr(__import__(name, fromlist=[name]), name)
+							loadedTools[name] = module
+						except Exception as e:
+							self.handler.Print('f', "Could Not Load: %s" % name)
+							self.handler.Print('c', str(e))
+		self.handler.Print('s', "Loaded {} tool(s)\n".format(len(loadedTools)))
 
 	def createPlugin(self, arg):
 		'''

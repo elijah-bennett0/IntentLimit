@@ -47,4 +47,4 @@ default_dirs:
 description: "A toolbox able to launch ctrlaltech tools quick and easy."
 name: IntentLimit
 type: IntentLimit
-version: 2.0
+version: 2023.0.1

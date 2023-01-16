@@ -16,15 +16,6 @@ __all__ = ["IOhandler", "truncate", "iowrap"]
 def truncate(string, length):
     return string if (len(string) <= length) else ("%s... (plus %d characters)" % (string[:length], len(string) - length))
 
-def iowrap(func):
-	def inner():
-		out = func()
-		status, msg = out.values()
-		pat = colormap[status]
-		self.stdout.write(pat+' '+msg+'\n')
-
-	return inner
-
 class IOhandler:
 	"""
 	Class to handle user IO
@@ -57,6 +48,9 @@ class IOhandler:
 		"i":{"[*]":self.blue,"attr":None},
 		"c":{"[CRITICAL]":self.red,"attr":self.highlight}}
 
+	def get_cmap(self):
+		return self.colormap
+
 	def write(self, text):
 		self.stdout.write(text)
 
@@ -87,6 +81,18 @@ class IOhandler:
 			#print(cmd)
 			cmdStr = "{:10}: {:30}\n".format(cmd[0], cmd[1])
 			self.write(cmdStr)
+def iowrap(func):
+	def inner():
+		handler = IOhandler()
+		colormap = handler.get_cmap()
+		out = func()
+		status, msg = out.values()
+		pat = list(colormap[status].keys())[0]
+		col = list(colormap[status].values())[0]
+		colpat = pat[0]+col+pat[1]+'\033[0m'+pat[2]
+		sys.stdout.write(colpat+' '+msg+'\n')
+
+	return inner
 
 ###
 

@@ -148,7 +148,7 @@ class ILCMD(cmd.Cmd):
 	def do_use(self, arg):
 		"""Use A Specified Plugin Or Tool"""
 		if arg in loadedPlugins:
-			func = loadedPlugins[arg][0]
+			func = loadedPlugins[arg]
 			func()
 		elif arg in loadedTools:
 			func = loadedTools[arg][0]
@@ -291,7 +291,7 @@ class ILCMD(cmd.Cmd):
 		if name in loadedTools:
 			path = loadedTools[name][1]
 			config = readConfig(path)
-			self.io.Print('i', "{} : {}".format(name, config['description']))
+			self.io.Print('i', "{} version {} : {}".format(config['name'], config['version'], config['description']))
 		elif name in loadedPlugins:
 			self.io.Print('f', "Info doesn't support plugins yet.")
 		elif name not in loadedPlugins and name not in loadedTools and name != '':

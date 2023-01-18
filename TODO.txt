@@ -25,3 +25,4 @@
 22. Fix iowrap bug in iohandler.py
 23. Add info() method in command.py that shows info about a tool or plugin. Use desc from config.yaml - DONE
 24. Create config.yaml for all coldheart tools/touches (should have input parameters etc)
+25. Create some C ncurses tests for future IL CLI revamp

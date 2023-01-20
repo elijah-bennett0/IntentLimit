@@ -45,7 +45,7 @@ class Manager():
 				except Exception as e:
 
 					self.handler.Print('f', "Could Not Load: %s" % name)
-					self.handler.Print('c', str(e))
+					self.handler.Print('c', str(e), '')
 		self.handler.Print('s', "Loaded {} plugin(s)".format(len(loadedPlugins)))
 
 	def loadTools(self):

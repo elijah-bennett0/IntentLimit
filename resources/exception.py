@@ -56,7 +56,7 @@ def ExceptionWrapped(func):
 			import traceback
 			trace = traceback.format_exc()
 			print("==========================", file=sys.stderr)
-			print("=   Unhandled Exception:  ", file=sys.stderr)
+			print("=  Unhandled Exception:  =", file=sys.stderr)
 			print("==========================", file=sys.stderr)
 			print("%s" % (trace), file=sys.stderr)
 			return None

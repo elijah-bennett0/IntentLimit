@@ -26,6 +26,13 @@ def setupCorePaths(ildir):
 
 def addPath(dir):
 	sys.path.append(dir)
+
+def supportsColors():
+	max_colors = int(subprocess.getoutput('tput colors'))
+	if max_colors > 0:
+		return True
+	else:
+		return False
 ###
 
 if __name__ == "__main__":

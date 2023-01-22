@@ -2,18 +2,18 @@
 	TODO, Not in any kind of order:
 
 1. Fix bug in pluginManager.py line 72.
-2. Create a method for color in inputs in iohandler.py
+2. Create a method for color in inputs in iohandler.py - DONE
 3. Fix bug in loadNew() line 111 in pluginManager.py, doesn't support files other than .py
 4. Finish the plugin loading methods for non-python scripts in pluginManager.py
-5. Finish tool loading methods for pluginManager.py (probably have to wait until the tools are finished)
+5. Finish tool loading methods for pluginManager.py (probably have to wait until the tools are finished) - DONE
 6. Add more banners to banners.txt
-7. Create checkIntegrity() method in env.py (checks integrity of files and directories listed in config.yaml)
+7. Create checkIntegrity() method in env.py (checks integrity of files and directories listed in config.yaml) - DONE
 8. Edit description of ilcmd.py, it's not exactly accurate
 9. Maybe optimize the Print() method in iohandler.py
-10. Implement the truncate() method (probably useful in plugin or tool output parsing)
+10. Implement the truncate() method (probably useful in plugin or tool output parsing) - DONE
 11. Create the update.py script to check for updates from github
-12. Fill in the config for IntentLimit.py
-13. Create the readConfig() method in ilcmd.py to read .yaml config files (maybe make generalized to be used to read other configs?)
+12. Fill in the config for IntentLimit.py - DONE
+13. Create the readConfig() method in ilcmd.py to read .yaml config files (maybe make generalized to be used to read other configs?) - DONE
 14. Create a couple more plugins
 15. Eventually add Windows support
 16. Re-work ILCMD and implement brain.py
@@ -24,5 +24,6 @@
 21. Add autorun functionality
 22. Fix iowrap bug in iohandler.py
 23. Add info() method in command.py that shows info about a tool or plugin. Use desc from config.yaml - DONE
-24. Create config.yaml for all coldheart tools/touches (should have input parameters etc)
-25. Create some C ncurses tests for future IL CLI revamp
+24. Create config.yaml for all coldheart tools/touches (should have input parameters etc) *PRE-EXISTING XMLs WILL BE USED*
+25. Create some C ncurses tests for future IL CLI revamp - IN PROGRESS
+26. Create method to check if color support, and if none, disable coloring in IL

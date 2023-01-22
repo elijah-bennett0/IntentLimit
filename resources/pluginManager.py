@@ -87,10 +87,18 @@ class Manager():
 
 		Bug 1 (6/28/22): Remove only removes python plugins. Need a way to get extension with only the filename
 		'''
-		yn = input("[?] Sure you want to delete? (y/n): ")
+		yn = self.handler.get_input("Sure you want to delete? (y/n): ")
 		if yn == 'y':
+			valid = []
+			for file in os.listdir(self.pluginDir):
+				if arg in file:
+					valid.append(file)
+			if len(valid) > 1:
+				self.handler.Print('w', "More than one file with this name exists:")
+				[self.handler.Print('i', x) for x in valid]
+			ext = self.handler.get_input("Extension: ")
 			try:
-				os.system("rm {}/{}.py".format(self.pluginDir, arg)) # Bug 1
+				os.system("rm -rf {}/{}".format(self.pluginDir, arg + ext)) # Bug 1
 				try:
 					del loadedPlugins[arg]
 				except:

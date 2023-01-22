@@ -14,11 +14,11 @@ __all__ = ["IOhandler", "iowrap"]
 
 ### Code
 
-class IOhandler:
+class IOhandler():
 	"""
 	Class to handle user IO
 	"""
-	def __init__(self, stdin=None, stdout=None):
+	def __init__(self, enable_color, stdin=None, stdout=None):
 		import sys
 		if stdin is not None:
 			self.stdin = stdin
@@ -29,16 +29,25 @@ class IOhandler:
 		else:
 			self.stdout = sys.stdout
 
+		self.enable_color = enable_color
 		self.stderr = self.stdout
 
 		self.prefix = "\033["
 		self.reset = f"{self.prefix}0m"
 		self.highlight = f"{self.prefix}7m"
 		self.red = f"{self.prefix}31m"
-		self.green = f"{self.prefix}37m"
+		self.green = f"{self.prefix}32m"
 		self.yellow = f"{self.prefix}33m"
 		self.blue = f"{self.prefix}36m"
 		self.magenta = f"{self.prefix}35m"
+
+		self.stylemap = {
+                "f":{"[-]":'',"attr":None},
+                "s":{"[+]":'',"attr":None},
+                "w":{"[!]":'',"attr":None},
+                "i":{"[*]":'',"attr":None},
+                "c":{"[CRITICAL]":'',"attr":self.highlight},
+                "q":{"[?]":'',"attr":None}}
 
 		self.colormap = {
 		"f":{"[-]":self.red,"attr":None},
@@ -51,15 +60,22 @@ class IOhandler:
 	def truncate(self, string, length):
 		return string if (len(string) <= length) else ("%s... (plus %d characters)" % (string[:length], len(string) - length))
 
-	def get_cmap(self):
-		return self.colormap
+	def get_cmap(self, enable_color):
+		if enable_color:
+			return self.colormap
+		else:
+			return self.stylemap
 
 	def write(self, text):
 		self.stdout.write(text)
 
 	def Print(self, type, text, *args):
+		if self.enable_color:
+			map = self.colormap
+		else:
+			map = self.stylemap
 		colored = ""
-		keys, values = list(self.colormap[type].keys()), list(self.colormap[type].values())
+		keys, values = list(map[type].keys()), list(map[type].values())
 		pat, col, attr = keys[0], values[0], values[1]
 		plen = len(pat)
 		if len(args) == 0:
@@ -99,8 +115,8 @@ def iowrap(func):
 		Very basic hacky coloring for plugins. Just needed it to work for now.
 		Can fix in later update.
 		'''
-		handler = IOhandler()
-		colormap = handler.get_cmap()
+		handler = IOhandler(True)
+		colormap = handler.get_cmap(True)
 		out = func()
 		status, msg = out.values()
 		pat = list(colormap[status].keys())[0]
@@ -113,7 +129,7 @@ def iowrap(func):
 ###
 
 if __name__ == "__main__":
-	handler = IOhandler()
+	handler = IOhandler(True) # True for colors, False for no color
 	handler.Print('f', "Test")
 	handler.Print('s', "Test")
 	handler.Print('w', "Test")

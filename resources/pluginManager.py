@@ -9,6 +9,7 @@
 ### Imports
 import os
 from iohandler import *
+from env import supportsColors
 ###
 
 __all__ = ["Manager", "loadedPlugins", "loadedTools"]
@@ -27,7 +28,7 @@ class Manager():
 		self.mainPath  = baseDir
 		self.pluginDir = plugDir
 		self.toolDir   = toolDir
-		self.handler   = IOhandler()
+		self.handler   = IOhandler(supportsColors())
 		self.supported = {'.py':'', '.pl':'perl ', '.sh':'./'}
 
 	def loadPlugins(self):
@@ -45,7 +46,7 @@ class Manager():
 				except Exception as e:
 
 					self.handler.Print('f', "Could Not Load: %s" % name)
-					self.handler.Print('c', str(e), '')
+					self.handler.Print('c', str(e))
 		self.handler.Print('s', "Loaded {} plugin(s)".format(len(loadedPlugins)))
 
 	def loadTools(self):
@@ -96,7 +97,12 @@ class Manager():
 			if len(valid) > 1:
 				self.handler.Print('w', "More than one file with this name exists:")
 				[self.handler.Print('i', x) for x in valid]
-			ext = self.handler.get_input("Extension: ")
+				ext = self.handler.get_input("Extension: ")
+			else:
+				if os.path.isdir(arg):
+					ext = ''
+				else:
+					ext = '.py' # .py is default
 			try:
 				os.system("rm -rf {}/{}".format(self.pluginDir, arg + ext)) # Bug 1
 				try:
@@ -138,6 +144,7 @@ class Manager():
 		'''
 		if _type == "plugins":
 			plugins = [x for x in os.listdir(self.pluginDir) if x.endswith(".py") and "init" not in x and "template" not in x and os.path.splitext(x)[0] not in loadedPlugins]
+			new = 0
 			if len(plugins) != 0:
 				self.handler.write("\n")
 				self.handler.Print('i', "Found {} new plugin(s)".format(len(plugins)))
@@ -148,10 +155,11 @@ class Manager():
 							name, t = os.path.splitext(plugin)
 							module = getattr(__import__(name, fromlist=[name]), name)
 							loadedPlugins[name] = module
+							new += 1
 						except Exception as e:
 							self.handler.Print('f', "Could Not Load: %s" % name)
 							self.handler.Print('c', str(e))
-				self.handler.Print('s', "Loaded {} new plugin(s)\n".format(len(plugins)))
+				self.handler.Print('s', "Loaded {} new plugin(s)\n".format(new))
 			else:
 				self.handler.Print('w', "No New Plugins Found!\n")
 		else:

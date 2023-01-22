@@ -12,7 +12,7 @@ import sys
 import subprocess
 ###
 
-__all__ = ["resizeConsole", "setupCorePaths", "addPath"]
+__all__ = ["resizeConsole", "setupCorePaths", "addPath", "supportsColors"]
 
 ### Code
 def resizeConsole(r, c):
@@ -28,6 +28,7 @@ def addPath(dir):
 	sys.path.append(dir)
 
 def supportsColors():
+	# Not too in depth but it works enuff.. probably
 	max_colors = int(subprocess.getoutput('tput colors'))
 	if max_colors > 0:
 		return True

@@ -47,8 +47,8 @@ def loadAll(il):
 	il.manager.loadTools()
 
 def python(il):
-	il.io.Print('i', "Dropping to Python, CTRL-D to exit", '')
-	code.interact(banner="")
+	il.io.Print('i', "Dropping to Python, CTRL-D to exit")
+	code.interact(banner="IntentLimit Python Interpreter")
 
 def main(il):
 	while True:
@@ -57,7 +57,7 @@ def main(il):
 		except exception.Interpreter:
 			python(il)
 		except KeyboardInterrupt:
-			il.io.Print('f', "User Aborted!", '')
+			il.io.Print('f', "User Aborted!")
 			break
 		else:
 			break

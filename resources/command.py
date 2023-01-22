@@ -14,6 +14,7 @@ from context import *
 from iohandler import *
 from exception import *
 from pluginManager import *
+from env import supportsColors
 from integrityCheck import readConfig
 ###
 
@@ -40,7 +41,7 @@ class ILCMD(cmd.Cmd):
 	shortcutKeys = {'?': "help", '!': "shell"}
 
 	def __init__(self, baseDir=None, plugDir=None, toolDir=None, stdin=None, stdout=None, stderr=None):
-		self.init_io(stdin=stdin, stdout=stdout, stderr=stdout)
+		self.init_io(supportsColors(), stdin=stdin, stdout=stdout, stderr=stdout)
 		self.defaultContext = CmdCtx("IntentLimit", "IntentLimit")
 		self.manager = Manager(baseDir=baseDir, plugDir=plugDir, toolDir=toolDir)
 		self.promptpre = PROMPT_PRE
@@ -50,8 +51,8 @@ class ILCMD(cmd.Cmd):
 	"""
 	IO Handling
 	"""
-	def init_io(self, stdin=None, stdout=None, stderr=None):
-		self.io = IOhandler(stdin=stdin, stdout=stdout)
+	def init_io(self, colors, stdin=None, stdout=None, stderr=None):
+		self.io = IOhandler(colors, stdin=stdin, stdout=stdout)
 
 	"""
 	Context/Prompt Operations

@@ -23,8 +23,9 @@
 20. Create  frame_mkr.py script
 21. Add autorun functionality
 22. Fix iowrap bug in iohandler.py - DONE
-
 23. Add info() method in command.py that shows info about a tool or plugin. Use desc from config.yaml - DONE
 24. Create config.yaml for all coldheart tools/touches (should have input parameters etc) *PRE-EXISTING XMLs WILL BE USED*
 25. Create some C ncurses tests for future IL CLI revamp - IN PROGRESS
 26. Create method to check if color support, and if none, disable coloring in IL - DONE
+27. Add contexting commands when context is changed (for example, using a tool)
+28. Add back command in command.py to return to previous context

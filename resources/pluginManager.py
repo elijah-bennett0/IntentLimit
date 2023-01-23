@@ -86,7 +86,6 @@ class Manager():
 		'''
 		Remove plugin
 
-		Bug 1 (6/28/22): Remove only removes python plugins. Need a way to get extension with only the filename
 		'''
 		yn = self.handler.get_input("Sure you want to delete? (y/n): ")
 		if yn == 'y':
@@ -104,7 +103,7 @@ class Manager():
 				else:
 					ext = '.py' # .py is default
 			try:
-				os.system("rm -rf {}/{}".format(self.pluginDir, arg + ext)) # Bug 1
+				os.system("rm -rf {}/{}".format(self.pluginDir, arg + ext))
 				try:
 					del loadedPlugins[arg]
 				except:
@@ -163,7 +162,15 @@ class Manager():
 			else:
 				self.handler.Print('w', "No New Plugins Found!\n")
 		else:
-			pass # tools here
+			categories = os.listdir(self.toolDir)
+			numTools = 0
+			for category in categories:
+				toolNames = os.listdir(os.path.join(self.toolDir, category))
+				for toolName in toolNames:
+					tools = [x for x in os.listdir(os.path.join(self.toolDir, category, toolName)) if os.path.splitext(x)[1] in self.supported and "init" not in x and "template" not in x]
+					numTools += 1
+					for tool in tools:
+						if os.path.splitext(tool)[1] == '.py':
 ###
 
 if __name__ == "__main__":

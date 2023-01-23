@@ -1,7 +1,7 @@
 
 	TODO, Not in any kind of order:
 
-1. Fix bug in pluginManager.py line 72.
+1. Fix bug in pluginManager.py line 72. - DONE
 2. Create a method for color in inputs in iohandler.py - DONE
 3. Fix bug in loadNew() line 111 in pluginManager.py, doesn't support files other than .py
 4. Finish the plugin loading methods for non-python scripts in pluginManager.py
@@ -22,8 +22,9 @@
 19. Create cleanhands plugin (probably in Perl)
 20. Create  frame_mkr.py script
 21. Add autorun functionality
-22. Fix iowrap bug in iohandler.py
+22. Fix iowrap bug in iohandler.py - DONE
+
 23. Add info() method in command.py that shows info about a tool or plugin. Use desc from config.yaml - DONE
 24. Create config.yaml for all coldheart tools/touches (should have input parameters etc) *PRE-EXISTING XMLs WILL BE USED*
 25. Create some C ncurses tests for future IL CLI revamp - IN PROGRESS
-26. Create method to check if color support, and if none, disable coloring in IL
+26. Create method to check if color support, and if none, disable coloring in IL - DONE

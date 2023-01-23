@@ -21,7 +21,7 @@ from integrityCheck import readConfig
 __all__ = ["ILCMD"]
 
 ### Code
-PROMPT_PRE = "IL"
+PROMPT_PRE = "[IL]"
 PROMPT_POST = "> "
 PROMPT_FMTSTR = " %s (%s) "
 
@@ -154,7 +154,7 @@ class ILCMD(cmd.Cmd):
 		elif arg in loadedTools:
 			func, path = loadedTools[arg][0], loadedTools[arg][1]
 			config = readConfig(path)
-			self.setContext((config['type'], config['name'])) # BUG: figure out how to set context
+			self.setContext(CmdCtx(config['name'],config['type'])) # BUG: figure out how to set context
 			self.setPrompt()
 			func()
 		else:

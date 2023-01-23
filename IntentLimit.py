@@ -2,8 +2,8 @@
 """
 @Description		: CTRLALTECH Main Toolbox
 @Author			: Ginsu
-@Date			: 2023014
-@Version		: 2023.0.1
+@Date			: 20230122
+@Version		: 2023.0.3
 """
 
 ### Imports
@@ -48,7 +48,7 @@ def loadAll(il):
 
 def python(il):
 	il.io.Print('i', "Dropping to Python, CTRL-D to exit")
-	code.interact(banner="IntentLimit Python Interpreter")
+	code.interact(banner='')
 
 def main(il):
 	while True:

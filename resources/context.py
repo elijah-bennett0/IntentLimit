@@ -7,10 +7,10 @@
 """
 
 ### Imports
-
+from command import ILCMD
 ###
 
-__all__ = ["CmdCtx"]
+__all__ = ["CmdCtx", "ToolCtx"]
 
 ### Code
 class CmdCtx:
@@ -60,6 +60,57 @@ class CmdCtx:
 
 	def getPlugins(self):
 		return []
+
+class ToolCtx(ILCMD):
+	"""
+	This takes ILCMD to bring in the core functionality of IL plus the context commands
+	specified here.
+
+	EX:
+	- set
+		Set a variable (defined in the config.yaml file for the tool)
+	- back
+		Return to the previous context
+	- use
+		Use a part of the tool (ex. exploits, backdoors, etc)
+	"""
+
+	"""
+	Set Command
+	"""
+	def help_set(self):
+		usage = ["set [param]",
+			"Set A Program Parameter"]
+		self.io.print_usage(usage)
+
+	def do_set(self, arg):
+		"""Set a Program Parameter"""
+		# Make method to load parameters out of the config file here
+
+	"""
+	Back Command
+	"""
+	def help_back(self):
+		usage = ["back",
+			"Return To a Previous Context"]
+		self.io.print_usage(usage)
+
+	def do_back(self):
+		"""Return To a Previous Context"""
+		pass
+
+	"""
+	Use Command
+	"""
+	def help_use(self):
+		usage = ["use [name]",
+			"Use An Exploit Or Another Program In The Tool."]
+		self.io.print_usage(usage)
+
+	def do_use(self, arg):
+		"""Use An Exploit Or Another Program In The Tool."""
+		pass
+
 ###
 
 if __name__ == "__main__":

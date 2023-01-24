@@ -154,9 +154,10 @@ class ILCMD(cmd.Cmd):
 		elif arg in loadedTools:
 			func, path = loadedTools[arg][0], loadedTools[arg][1]
 			config = readConfig(path)
-			self.setContext(CmdCtx(config['name'],config['type'])) # BUG: figure out how to set context
+			self.setContext(CmdCtx(config['name'],config['type']))
 			self.setPrompt()
 			func()
+			
 		else:
 			self.help_use()
 

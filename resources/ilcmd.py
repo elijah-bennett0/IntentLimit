@@ -20,7 +20,7 @@ __all__ = ["IntentLimit"]
 ### Code
 class IntentLimit(ILCMD):
 	"""
-	Context Specific Command Handling
+	Basic Command Loading And Handling
 	"""
 	def __init__(self, configFile, baseDir=None, plugDir=None, toolDir=None, stdin=None, stdout=None, stderr=None):
 

@@ -6,9 +6,9 @@
 3. Fix bug in loadNew() line 111 in pluginManager.py, doesn't support files other than .py
 4. Finish the plugin loading methods for non-python scripts in pluginManager.py
 5. Finish tool loading methods for pluginManager.py (probably have to wait until the tools are finished) - DONE
-6. Add more banners to banners.txt
+6. Add more banners to banners.txt - DONE
 7. Create checkIntegrity() method in env.py (checks integrity of files and directories listed in config.yaml) - DONE
-8. Edit description of ilcmd.py, it's not exactly accurate
+8. Edit description of ilcmd.py, it's not exactly accurate - DONE
 9. Maybe optimize the Print() method in iohandler.py
 10. Implement the truncate() method (probably useful in plugin or tool output parsing) - DONE
 11. Create the update.py script to check for updates from github
@@ -20,11 +20,12 @@
 17. Implement logger algorithm
 18. Create cyclic gen plugin
 19. Create cleanhands plugin (probably in Perl)
-20. Create  frame_mkr.py script
+20. Create frame_mkr.py script
 21. Add autorun functionality
 22. Fix iowrap bug in iohandler.py - DONE
-
 23. Add info() method in command.py that shows info about a tool or plugin. Use desc from config.yaml - DONE
 24. Create config.yaml for all coldheart tools/touches (should have input parameters etc) *PRE-EXISTING XMLs WILL BE USED*
 25. Create some C ncurses tests for future IL CLI revamp - IN PROGRESS
 26. Create method to check if color support, and if none, disable coloring in IL - DONE
+27. Add contexting commands when context is changed (for example, using a tool)
+28. Add back command in command.py to return to previous context

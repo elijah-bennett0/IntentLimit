@@ -33,14 +33,12 @@ class Manager():
 
 	def loadPlugins(self):
 		plugins = [x for x in os.listdir(self.pluginDir) if os.path.splitext(x)[1] in self.supported and "init" not in x and "template" not in x]
-		#self.handler.write("\n")
 		self.handler.Print('i', "Found {} plugin(s)".format(len(plugins)))
 		self.handler.Print('i', "Loading plugins...")
 		for plugin in plugins:
 			if os.path.splitext(plugin)[1] == '.py':
 				try:
 					name, t = os.path.splitext(plugin)
-					#print(os.getcwd())
 					module = getattr(__import__(name, fromlist=[name]), name)
 					loadedPlugins[name] = module
 				except Exception as e:
@@ -62,7 +60,6 @@ class Manager():
 					if os.path.splitext(tool)[1] == '.py':
 						try:
 							name, t = os.path.splitext(tool)
-							#print(os.getcwd())
 							module = getattr(__import__(name, fromlist=[name]), name)
 							configPath = os.path.join(self.toolDir, category, toolName, "config.yaml")
 							loadedTools[name] = [module, configPath]
@@ -134,8 +131,27 @@ class Manager():
 						self.handler.Print('f', "Could Not Load: %s" % name)
 						self.handler.Print('c', str(e))
 			self.handler.Print('s', "Loaded {} plugin(s)\n".format(len(loadedPlugins)))
-		else:
-			pass # tools here
+		elif _type == "tools":
+			self.handler.Print('i', "Loading tools...")
+			categories = os.listdir(self.toolDir)
+			numTools = 0
+			for category in categories:
+				toolNames = os.listdir(os.path.join(self.toolDir, category))
+				for toolName in toolNames:
+					tools = [x for x in os.listdir(os.path.join(self.toolDir, category, toolName)) if os.path.splitext(x)[1] in self.supported and "init" not in x and "template" not in x]
+					numTools += 1
+					for tool in tools:
+						if os.path.splitext(tool)[1] == '.py':
+							try:
+								name, t = os.path.splitext(tool)
+								module = getattr(__import__(name, fromlist=[name]), name)
+								configPath = os.path.join(self.toolDir, category, toolName, "config.yaml")
+								loadedTools[name] = [module, configPath]
+							except Exception as e:
+								self.handler.Print('f', "Could Not Load: %s" % name)
+								self.handler.Print('c', str(e))
+			self.handler.Print('i', "Found {} tool(s)".format(numTools))
+			self.handler.Print('s', "Loaded {} tool(s)\n".format(len(loadedTools)))
 
 	def loadNew(self, _type):
 		'''
@@ -163,15 +179,28 @@ class Manager():
 				self.handler.Print('w', "No New Plugins Found!\n")
 		else:
 			categories = os.listdir(self.toolDir)
-			numTools = 0
+			new = 0
 			for category in categories:
 				toolNames = os.listdir(os.path.join(self.toolDir, category))
 				for toolName in toolNames:
-					tools = [x for x in os.listdir(os.path.join(self.toolDir, category, toolName)) if os.path.splitext(x)[1] in self.supported and "init" not in x and "template" not in x]
-					numTools += 1
-					for tool in tools:
-						if os.path.splitext(tool)[1] == '.py':
-###
+					tools = [x for x in os.listdir(os.path.join(self.toolDir, category, toolName)) if os.path.splitext(x)[1] in self.supported and \
+					"init" not in x and "template" not in x and os.path.splitext(x)[0] not in loadedTools]
+					if len(tools) != 0:
+						for tool in tools:
+							if os.path.splitext(tool)[1] == '.py':
+								try:
+									name, t = os.path.splitext(tool)
+									module = getattr(__import__(name, fromlist=[name]), name)
+									loadedTools[name] = module
+									new += 1
+								except Exception as e:
+									self.handler.Print('f', "Could Not Load: %s" % name)
+									self.handler.Print('c', str(e))
+						self.handler.Print('s', "Loaded {} new tool(s)".format(new))
+						return
+					else:
+						self.handler.Print('w', "No New Tools Found!\n")
+						return
 
 if __name__ == "__main__":
 	manager = Manager("/home/ginsu/Desktop/Toolbox/IntentLimit")

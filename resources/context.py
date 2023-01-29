@@ -33,13 +33,13 @@ class CmdCtx:
 	def setType(self, type):
 		self.type = type
 
-	def lookupCmd(self, name: str) -> CmdFunc:
+	def lookupCmd(self, name: str) -> "Returns a function reference":
 		return getattr(self, "do_" + name.lower())
 
-	def lookupCompFunc(self, name: str) -> CmdFunc:
+	def lookupCompFunc(self, name: str) -> "Returns a function reference":
 		return getattr(self, "complete_" + name.lower())
 
-	def lookupHelpFunc(self, name: str) -> CmdFunc:
+	def lookupHelpFunc(self, name: str) -> "Returns a function reference":
 		print(getattr(self, "help_" + name.lower()))
 
 	def getNames(self) -> list:

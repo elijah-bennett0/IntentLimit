@@ -20,7 +20,7 @@ def readConfig(config: str) -> dict:
 			print(e)
 	return _config
 
-def checkAndLoad(config: dict, iohandler: IOClass, PATH: str):
+def checkAndLoad(config: dict, iohandler: "iohandler class from iohandler.py", PATH: str):
 	# Should probably try to optimize this a bit
 
 	missing = []

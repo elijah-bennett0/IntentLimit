@@ -38,7 +38,7 @@ class IntentLimit(ILCMD, ):
 		self.cmdqueue = []
 		config: dict = readConfig(configFile)
 		self.configvars: dict = config # config vars not from setg
-		checkAndLoad(config: dict, self.io: IOClass, baseDir)
+		checkAndLoad(config: dict, self.io: "iohandler class from iohandler.py", baseDir)
 		# ^ only checks from IntentLimit config.yaml
 		# in each tool, call this method again specifying its own config.yaml
 

@@ -53,7 +53,7 @@ class ILCMD(cmd.Cmd):
 	IO Handling
 	"""
 	def init_io(self, colors: bool, stdin=None, stdout=None, stderr=None):
-		self.io: ClassVar = IOhandler(colors: bool, stdin=stdin, stdout=stdout)
+		self.io: "A IOHandler instance from iohandler.py" = IOhandler(colors: bool, stdin=stdin, stdout=stdout)
 
 	"""
 	Context/Prompt Operations
@@ -67,12 +67,12 @@ class ILCMD(cmd.Cmd):
 			prompt = self.promptpre + context + PROMPT_POST
 		self.prompt = prompt
 
-	def setContext(self, newCtx: CmdCtxCall):
+	def setContext(self, newCtx: "CmdCtx(name, type)"):
 		if newCtx is None:
 			newCtx = self.defaultContext
-		self.ctx: CmdCtxObj = newCtx
+		self.ctx: "A CmdCtx instance from context.py" = newCtx
 
-	def getContext(self) -> CmdCtxObj:
+	def getContext(self) -> "A CmdCtx instance from context.py":
 		return self.ctx
 
 	"""
@@ -247,7 +247,7 @@ class ILCMD(cmd.Cmd):
 	"""
 	Help Command
 	"""
-	def get_help_lists(self, names, ctx):
+	def get_help_lists(self, names, ctx) -> list:
 		do_cmds = list(set([name for name in names if name.startswith("do_")]))
 		do_cmds.sort()
 		return [(name[3:], str(getattr(ctx, name).__doc__)) for name in do_cmds]

@@ -10,6 +10,7 @@
 import cmd
 import string
 import subprocess
+from typing import *
 from context import *
 from iohandler import *
 from exception import *
@@ -42,8 +43,8 @@ class ILCMD(cmd.Cmd):
 
 	def __init__(self, baseDir=None, plugDir=None, toolDir=None, stdin=None, stdout=None, stderr=None):
 		self.init_io(supportsColors(), stdin=stdin, stdout=stdout, stderr=stdout)
-		self.defaultContext = CmdCtx("IntentLimit", "IntentLimit")
-		self.manager = Manager(baseDir=baseDir, plugDir=plugDir, toolDir=toolDir)
+		self.defaultContext: ClassVar = CmdCtx("IntentLimit", "IntentLimit")
+		self.manager: ClassVar = Manager(baseDir=baseDir, plugDir=plugDir, toolDir=toolDir)
 		self.promptpre = PROMPT_PRE
 		self.setContext(None)
 		self.setPrompt()
@@ -51,8 +52,8 @@ class ILCMD(cmd.Cmd):
 	"""
 	IO Handling
 	"""
-	def init_io(self, colors, stdin=None, stdout=None, stderr=None):
-		self.io = IOhandler(colors, stdin=stdin, stdout=stdout)
+	def init_io(self, colors: bool, stdin=None, stdout=None, stderr=None):
+		self.io: ClassVar = IOhandler(colors: bool, stdin=stdin, stdout=stdout)
 
 	"""
 	Context/Prompt Operations
@@ -66,12 +67,12 @@ class ILCMD(cmd.Cmd):
 			prompt = self.promptpre + context + PROMPT_POST
 		self.prompt = prompt
 
-	def setContext(self, newCtx):
+	def setContext(self, newCtx: CmdCtxCall):
 		if newCtx is None:
 			newCtx = self.defaultContext
-		self.ctx = newCtx
+		self.ctx: CmdCtxObj = newCtx
 
-	def getContext(self):
+	def getContext(self) -> CmdCtxObj:
 		return self.ctx
 
 	"""
@@ -157,7 +158,6 @@ class ILCMD(cmd.Cmd):
 			self.setContext(CmdCtx(config['name'],config['type']))
 			self.setPrompt()
 			func()
-			
 		else:
 			self.help_use()
 

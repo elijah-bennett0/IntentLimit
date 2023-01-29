@@ -7,7 +7,7 @@
 """
 
 ### Imports
-from command import ILCMD
+#from command import *
 ###
 
 __all__ = ["CmdCtx", "ToolCtx"]
@@ -21,10 +21,10 @@ class CmdCtx:
 		self.setName(name)
 		self.setType(type)
 
-	def getName(self):
+	def getName(self) -> str:
 		return self.name
 
-	def getType(self):
+	def getType(self) -> str:
 		return self.type
 
 	def setName(self, name):
@@ -33,16 +33,16 @@ class CmdCtx:
 	def setType(self, type):
 		self.type = type
 
-	def lookupCmd(self, name):
+	def lookupCmd(self, name: str) -> CmdFunc:
 		return getattr(self, "do_" + name.lower())
 
-	def lookupCompFunc(self, name):
+	def lookupCompFunc(self, name: str) -> CmdFunc:
 		return getattr(self, "complete_" + name.lower())
 
-	def lookupHelpFunc(self, name):
+	def lookupHelpFunc(self, name: str) -> CmdFunc:
 		print(getattr(self, "help_" + name.lower()))
 
-	def getNames(self):
+	def getNames(self) -> list:
 		names = []
 		classes = [self.__class__]
 		while classes:
@@ -55,13 +55,13 @@ class CmdCtx:
 	def setPlugin(self, unused):
 		pass
 
-	def getActive(self):
+	def getActive(self) -> str:
 		return self.getName()
 
-	def getPlugins(self):
+	def getPlugins(self) -> list:
 		return []
 
-class ToolCtx(ILCMD):
+class ToolCtx(base):
 	"""
 	This takes ILCMD to bring in the core functionality of IL plus the context commands
 	specified here.

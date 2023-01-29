@@ -18,11 +18,11 @@ from integrityCheck import *
 __all__ = ["IntentLimit"]
 
 ### Code
-class IntentLimit(ILCMD):
+class IntentLimit(ILCMD, ):
 	"""
 	Basic Command Loading And Handling
 	"""
-	def __init__(self, configFile, baseDir=None, plugDir=None, toolDir=None, stdin=None, stdout=None, stderr=None):
+	def __init__(self, configFile: str, baseDir=None, plugDir=None, toolDir=None, stdin=None, stdout=None, stderr=None):
 
 		# Command/IO Handling
 		ILCMD.__init__(self, baseDir=baseDir, plugDir=plugDir, toolDir=toolDir, stdin=stdin, stdout=stdout, stderr=stderr)
@@ -36,9 +36,9 @@ class IntentLimit(ILCMD):
 		# Config stuff
 		self.completekey = 'tab'
 		self.cmdqueue = []
-		config = readConfig(configFile)
-		self.configvars = config # config vars not from setg
-		checkAndLoad(config, self.io, baseDir)
+		config: dict = readConfig(configFile)
+		self.configvars: dict = config # config vars not from setg
+		checkAndLoad(config: dict, self.io: IOClass, baseDir)
 		# ^ only checks from IntentLimit config.yaml
 		# in each tool, call this method again specifying its own config.yaml
 

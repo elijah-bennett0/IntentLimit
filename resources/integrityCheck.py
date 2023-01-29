@@ -12,7 +12,7 @@ from iohandler import *
 
 __all__ = ["readConfig", "checkAndLoad"]
 
-def readConfig(config):
+def readConfig(config: str) -> dict:
 	with open(config) as file:
 		try:
 			_config = yaml.safe_load(file)
@@ -20,7 +20,7 @@ def readConfig(config):
 			print(e)
 	return _config
 
-def checkAndLoad(config, iohandler, PATH):
+def checkAndLoad(config: dict, iohandler: IOClass, PATH: str):
 	# Should probably try to optimize this a bit
 
 	missing = []

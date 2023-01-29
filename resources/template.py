@@ -11,7 +11,8 @@
 
 __all__ = []
 
-### Code
+# Name the main function the same name as the file
+### Code:
 
 ###
 

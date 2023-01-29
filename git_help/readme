@@ -1,0 +1,2 @@
+PUSH: git push -u origin main
+COMMIT: git commit -m 'message'

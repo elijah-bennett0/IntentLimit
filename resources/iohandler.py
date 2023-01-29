@@ -57,10 +57,10 @@ class IOhandler():
 		"c":{"[CRITICAL]":self.red,"attr":self.highlight},
 		"q":{"[?]":self.magenta,"attr":None}}
 
-	def truncate(self, string, length):
+	def truncate(self, string: str, length: int) -> str:
 		return string if (len(string) <= length) else ("%s... (plus %d characters)" % (string[:length], len(string) - length))
 
-	def get_cmap(self, enable_color):
+	def get_cmap(self, enable_color: bool) -> dict:
 		if enable_color:
 			return self.colormap
 		else:
@@ -95,7 +95,7 @@ class IOhandler():
 		line = colored + " " + text + end # Bug i think. *args might do weird shit
 		self.write(line)
 
-	def get_input(self, text):
+	def get_input(self, text: str) -> str:
 		self.Print('q', text, '')
 		i = input()
 		return i

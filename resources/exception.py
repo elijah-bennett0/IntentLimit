@@ -14,7 +14,7 @@ from iohandler import *
 __all__ = ["Interpreter", "CmdErr", "PromptErr", "ExceptionWrapped"]
 
 ### Code
-class CmdErr(Exception):
+class CmdErr(Exception) -> str:
 	"""
 	Class for command errors
 	"""
@@ -32,7 +32,7 @@ class PromptErr(CmdErr):
 		CmdErr.__init__(self, error)
 		self.prefix = "Prompt Error:"
 
-class Interpreter(Exception):
+class Interpreter(Exception) -> str:
 	"""
 	Class for the interpreter exception
 	"""

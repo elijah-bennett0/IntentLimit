@@ -13,12 +13,12 @@ from resources.env import *
 ###
 
 ### Directory Setup
-(IL_FILE, IL_DIR) = setupCorePaths(os.path.realpath(__file__))
+(IL_FILE: str, IL_DIR: str) = setupCorePaths(os.path.realpath(__file__))
 
-RESOURCE_DIR = os.path.join(IL_DIR, "resources")
-PLUGIN_DIR   = os.path.join(IL_DIR, "plugins")
-TOOL_DIR     = os.path.join(IL_DIR, "tools")
-IL_CONFIG    = os.path.join(IL_DIR, "config.yaml")
+RESOURCE_DIR: str = os.path.join(IL_DIR, "resources")
+PLUGIN_DIR:   str = os.path.join(IL_DIR, "plugins")
+TOOL_DIR:     str = os.path.join(IL_DIR, "tools")
+IL_CONFIG:    str = os.path.join(IL_DIR, "config.yaml")
 ###
 
 ### Path Stuff
@@ -62,7 +62,7 @@ def main(il):
 		else:
 			break
 @exception.ExceptionWrapped
-def run(config, ildir):
+def run(config: str, ildir: str):
 	global il
 	il = IntentLimit(config, ildir, PLUGIN_DIR, TOOL_DIR)
 	loadAll(il)

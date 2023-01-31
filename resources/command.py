@@ -157,9 +157,17 @@ class ILCMD(cmd.Cmd):
 			self.setContext(CmdCtx(config['name'],config['type']))
 			self.setPrompt()
 			func()
-			
 		else:
 			self.help_use()
+
+	def help_back(self):
+		usage = ["back",
+			"Return to base context"]
+		self.io.print_usage(usage)
+
+	def do_back(self):
+		self.__class__ = type('ILCMD',(ILCMD,),{})
+		self.setContext(None)
 
 	"""
 	Show Command

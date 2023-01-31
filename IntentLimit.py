@@ -29,9 +29,7 @@ addPath(TOOL_DIR)
 # This is to add the path of each tool individually.
 # Did this because the __import__ method was not working with tool loading.
 # Maybe find a more elegant way to do this?
-for cat in os.listdir(TOOL_DIR):
-	for tool in os.listdir(os.path.join(TOOL_DIR, cat)):
-		addPath(os.path.join(TOOL_DIR, cat, tool))
+addToolDirs(TOOL_DIR)
 ###
 
 ### Local Imports

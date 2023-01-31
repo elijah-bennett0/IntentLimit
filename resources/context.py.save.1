@@ -7,7 +7,7 @@
 """
 
 ### Imports
-
+from command import ILCMD
 ###
 
 __all__ = ["CmdCtx", "ToolCtx"]
@@ -48,7 +48,7 @@ class CmdCtx:
 		while classes:
 			aclass = classes.pop(0)
 			if aclass.__bases:
-				classes += list(aclass.__bases__) ## ERROR HERE; no attribute __bases__
+				classes += list(aclass.__bases__)
 			names += dir(aclass)
 		return names
 
@@ -61,7 +61,7 @@ class CmdCtx:
 	def getPlugins(self):
 		return []
 
-class ToolCtx(CmdCtx):
+class ToolCtx(ILCMD, configFile):
 	"""
 	This takes ILCMD to bring in the core functionality of IL plus the context commands
 	specified here.
@@ -73,6 +73,15 @@ class ToolCtx(CmdCtx):
 		Return to the previous context
 	- use
 		Use a part of the tool (ex. exploits, backdoors, etc)
+
+
+	Config Vars Example:
+
+
+
+
+
+
 	"""
 
 	"""
@@ -88,6 +97,18 @@ class ToolCtx(CmdCtx):
 		# Make method to load parameters out of the config file here
 
 	"""
+	Back Command
+	"""
+	def help_back(self):
+		usage = ["back",
+			"Return To a Previous Context"]
+		self.io.print_usage(usage)
+
+	def do_back(self):
+		"""Return To a Previous Context"""
+		pass
+
+	"""
 	Use Command
 	"""
 	def help_use(self):
@@ -99,8 +120,6 @@ class ToolCtx(CmdCtx):
 		"""Use An Exploit Or Another Program In The Tool."""
 		pass
 
-	def do_test(self):
-		print("CONTEXT SUCCESS")
 ###
 
 if __name__ == "__main__":

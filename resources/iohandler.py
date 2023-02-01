@@ -105,10 +105,12 @@ class IOhandler():
 
 	def print_cmd_list(self, args):
 		cmds = args['commands']
+		self.write("\n")
 		for cmd in cmds:
-			#print(cmd)
 			cmdStr = "{:10}: {:30}\n".format(cmd[0], cmd[1])
 			self.write(cmdStr)
+		self.write("\n")
+
 def iowrap(func):
 	def inner():
 		'''

@@ -47,8 +47,8 @@ class CmdCtx:
 		classes = [self.__class__]
 		while classes:
 			aclass = classes.pop(0)
-			if aclass.__bases:
-				classes += list(aclass.__bases__) ## ERROR HERE; no attribute __bases__
+			if aclass.__bases__:
+				classes += list(aclass.__bases__)
 			names += dir(aclass)
 		return names
 
@@ -99,7 +99,7 @@ class ToolCtx(CmdCtx):
 		"""Use An Exploit Or Another Program In The Tool."""
 		pass
 
-	def do_test(self):
+	def do_test(self, arg):
 		print("CONTEXT SUCCESS")
 ###
 

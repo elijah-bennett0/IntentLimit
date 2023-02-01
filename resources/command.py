@@ -2,8 +2,8 @@
 """
 @Description		: IntentLimit override for Python CMD
 @Author			: Ginsu
-@Date			: 20230115
-@Version		: 2.2
+@Date			: 20230201
+@Version		: 2.3
 """
 
 ### Imports
@@ -21,7 +21,7 @@ from integrityCheck import readConfig
 __all__ = ["ILCMD"]
 
 ### Code
-PROMPT_PRE = "[IL]"
+PROMPT_PRE = "[IL]" # make prompt prettier; [IL:Exploitation\Coldheart] >   like this
 PROMPT_POST = "> "
 PROMPT_FMTSTR = " %s (%s) "
 
@@ -150,12 +150,15 @@ class ILCMD(cmd.Cmd):
 		"""Use A Specified Plugin Or Tool"""
 		if arg in loadedPlugins:
 			func = loadedPlugins[arg]
+			#self.setContext(CmdCtx(config['name'],config['type']))
+			#self.__class__ = type('pluginCtx',(ILCMD,pluginCtx),{})
 			func()
 		elif arg in loadedTools:
 			func, path = loadedTools[arg][0], loadedTools[arg][1]
 			config = readConfig(path)
 			self.setContext(CmdCtx(config['name'],config['type']))
-			self.setPrompt()
+			self.__class__ = type('ToolCtx',(ILCMD,ToolCtx),{}) # Prob should put this
+			self.setPrompt()                                    # and this in setContext()
 			func()
 		else:
 			self.help_use()
@@ -165,9 +168,11 @@ class ILCMD(cmd.Cmd):
 			"Return to base context"]
 		self.io.print_usage(usage)
 
-	def do_back(self):
+	def do_back(self, arg):
+		"""Return To Previous Context"""
 		self.__class__ = type('ILCMD',(ILCMD,),{})
 		self.setContext(None)
+		self.setPrompt()
 
 	"""
 	Show Command
@@ -266,24 +271,18 @@ class ILCMD(cmd.Cmd):
 		if len(args) > 0:
 			arg = args[0]
 			try:
-				#print(1)
 				func = self.ctx.lookupHelpFunction(arg)
 				func()
 			except AttributeError:
-				#print(2)
 				pass
 			try:
-				#print(3)
 				func = getattr(self, "help_" + arg.lower())
 				func()
 			except AttributeError:
-				#print(4)
 				pass
 		else:
-			#print(5)
 			cmds = self.get_help_lists(self.get_names(), self)
 			cmdlist = {"title":"Core Commands","commands":cmds}
-			#print(self.get_help_lists(self.get_names(), self.ctx))
 			self.io.print_cmd_list(cmdlist)
 
 			if self.ctx.getName() != self.defaultContext.getName():
@@ -341,6 +340,7 @@ class ILCMD(cmd.Cmd):
 				func = getattr(self, "do_" + cmd.lower())
 			except AttributeError:
 				return self.default(line)
+
 			return func(arg)
 
 	def emptyline(self):

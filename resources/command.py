@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+
 """
 @Description		: IntentLimit override for Python CMD
 @Author			: Ginsu
@@ -7,6 +8,7 @@
 """
 
 ### Imports
+import os
 import cmd
 import string
 import subprocess
@@ -21,9 +23,9 @@ from integrityCheck import readConfig
 __all__ = ["ILCMD"]
 
 ### Code
-PROMPT_PRE = "[IL]" # make prompt prettier; [IL:Exploitation\Coldheart] >   like this
-PROMPT_POST = "> "
-PROMPT_FMTSTR = " %s (%s) "
+PROMPT_PRE = "(IL" # make prompt prettier; [IL:Exploitation\Coldheart] >   like this
+PROMPT_POST = ") > "
+PROMPT_FMTSTR = ":%s:%s"
 
 class ILCMD(cmd.Cmd):
 	"""
@@ -41,12 +43,12 @@ class ILCMD(cmd.Cmd):
 	shortcutKeys = {'?': "help", '!': "shell"}
 
 	def __init__(self, baseDir=None, plugDir=None, toolDir=None, stdin=None, stdout=None, stderr=None):
+		self.baseDir, self.plugDir, self.toolDir, = baseDir, plugDir, toolDir
 		self.init_io(supportsColors(), stdin=stdin, stdout=stdout, stderr=stdout)
 		self.defaultContext = CmdCtx("IntentLimit", "IntentLimit")
 		self.manager = Manager(baseDir=baseDir, plugDir=plugDir, toolDir=toolDir)
 		self.promptpre = PROMPT_PRE
-		self.setContext(None)
-		self.setPrompt()
+		self.setContext(None, None)
 
 	"""
 	IO Handling
@@ -60,16 +62,21 @@ class ILCMD(cmd.Cmd):
 	def setPrompt(self, prompt=None):
 		if prompt is None:
 			if self.getContext().getName() == self.defaultContext.getName():
-				context = " "
+				context = ""
 			else:
 				context = PROMPT_FMTSTR % (self.getContext().getType(), self.getContext().getName())
 			prompt = self.promptpre + context + PROMPT_POST
 		self.prompt = prompt
 
-	def setContext(self, newCtx):
+	def setContext(self, newCtx, Class):
 		if newCtx is None:
 			newCtx = self.defaultContext
 		self.ctx = newCtx
+		if Class:
+			self.__class__ = type('ToolCtx',(ILCMD, Class),{})
+		else:
+			self.__class__ = type('ILCMD',(ILCMD,),{})
+		self.setPrompt()
 
 	def getContext(self):
 		return self.ctx
@@ -150,15 +157,14 @@ class ILCMD(cmd.Cmd):
 		"""Use A Specified Plugin Or Tool"""
 		if arg in loadedPlugins:
 			func = loadedPlugins[arg]
-			#self.setContext(CmdCtx(config['name'],config['type']))
-			#self.__class__ = type('pluginCtx',(ILCMD,pluginCtx),{})
-			func()
+			config = readConfig(os.path.join(self.plugDir,arg,"config.yaml"))
+			self.setContext(CmdCtx(config['name'],config['type']), PluginCtx)
+			self.__class__ = type('PluginCtx',(ILCMD,PluginCtx),{})
+			func(self.io)
 		elif arg in loadedTools:
 			func, path = loadedTools[arg][0], loadedTools[arg][1]
 			config = readConfig(path)
-			self.setContext(CmdCtx(config['name'],config['type']))
-			self.__class__ = type('ToolCtx',(ILCMD,ToolCtx),{}) # Prob should put this
-			self.setPrompt()                                    # and this in setContext()
+			self.setContext(CmdCtx(config['name'],config['type']), ToolCtx)
 			func()
 		else:
 			self.help_use()
@@ -170,8 +176,7 @@ class ILCMD(cmd.Cmd):
 
 	def do_back(self, arg):
 		"""Return To Previous Context"""
-		self.__class__ = type('ILCMD',(ILCMD,),{})
-		self.setContext(None)
+		self.setContext(None, None)
 		self.setPrompt()
 
 	"""

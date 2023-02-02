@@ -12,7 +12,7 @@
 __all__ = ["bin_analysis"]
 
 ### Code
-def bin_analysis():
+def bin_analysis(handler):
 	"""
 	Write algorithms for:
 	 - strings
@@ -25,6 +25,7 @@ def bin_analysis():
 	"""
 	print("Mini Binary Analysis Tool")
 	print("-------------------------")
+	handler.Print('s', "Test")
 ###
 
 if __name__ == "__main__":

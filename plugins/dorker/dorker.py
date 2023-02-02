@@ -6,13 +6,12 @@
 """
 
 ### Imports
-from resources.iohandler import *
+
 ###
 
 __all__ = ["dorker"]
 ### Code
-@iowrap
-def dorker():
+def dorker(handler):
 	print("Mini Google Dorker")
 	print("------------------")
 	print("(1) Pages linked to URL")
@@ -36,8 +35,7 @@ def dorker():
 		name = input("Name: ")
 		string = ops[option] + name
 
-	stat, msg = 's', "Enter this string into Google:\n\t=> {}".format(string)
-	return {'status':stat, 'msg':msg}
+	handler.Print('s', "Enter this string into Google:\n\t=> {}".format(string))
 ###
 
 if __name__ == "__main__":

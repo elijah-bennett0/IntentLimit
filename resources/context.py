@@ -10,7 +10,7 @@
 
 ###
 
-__all__ = ["CmdCtx", "ToolCtx"]
+__all__ = ["CmdCtx", "ToolCtx", "PluginCtx"]
 
 ### Code
 class CmdCtx:
@@ -73,6 +73,8 @@ class ToolCtx(CmdCtx):
 		Return to the previous context
 	- use
 		Use a part of the tool (ex. exploits, backdoors, etc)
+	- run
+		Run the selected tool
 	"""
 
 	"""
@@ -80,12 +82,12 @@ class ToolCtx(CmdCtx):
 	"""
 	def help_set(self):
 		usage = ["set [param]",
-			"Set A Program Parameter"]
+			"Set A Tool Parameter"]
 		self.io.print_usage(usage)
 
 	def do_set(self, arg):
-		"""Set a Program Parameter"""
-		# Make method to load parameters out of the config file here
+		"""Set a Tool Parameter"""
+		# Make method to load parameters in another script, import it and implement it here
 
 	"""
 	Use Command
@@ -97,10 +99,51 @@ class ToolCtx(CmdCtx):
 
 	def do_use(self, arg):
 		"""Use An Exploit Or Another Program In The Tool."""
+		pass # WRITE USE METHOD FOR THE TOOLS INSIDE THE SUB-FRAMEWORKS (Ex. using eternalblue in ColdHeart)
+
+	"""
+	Run Command
+	"""
+	def help_run(self):
+		usage = ["run",
+			"Run The Selected Tool/Program"]
+
+	def do_run(self):
 		pass
 
 	def do_test(self, arg):
 		print("CONTEXT SUCCESS")
+
+class PluginCtx(CmdCtx):
+	"""
+	This will add the base functionality of IL plus the plugin specific commands
+
+	EX:
+	- set
+		Set a plugin variable
+	- run
+		Run the plugin
+	"""
+
+	"""
+	Set Command
+	"""
+	def help_set(self):
+		usage = ["set [param]",
+			"Set A Plugin Parameter"]
+		self.io.print_usage(usage)
+
+	"""
+	Run Command
+	"""
+	def help_run(self):
+		usage = ["run",
+			"Run The Selected Plugin"]
+		self.io.print_usage(usage)
+
+	def do_run(self):
+		pass
+
 ###
 
 if __name__ == "__main__":

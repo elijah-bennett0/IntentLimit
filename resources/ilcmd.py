@@ -43,7 +43,6 @@ class IntentLimit(ILCMD):
 		# in each tool, call this method again specifying its own config.yaml
 
 		# More config and variable stuff
-		self.postConfig()
 		self.ilgvars = {} # IL global vars from setg -> MOVE TO command.py
 
 	def postConfig(self):

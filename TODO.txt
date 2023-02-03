@@ -5,14 +5,11 @@
 2. Finish the plugin loading methods for non-python scripts in pluginManager.py
 3. Maybe optimize the Print() method in iohandler.py
 4. Create the update.py script to check for updates from github
-5. Create the readConfig() method in ilcmd.py to read .yaml config files (maybe make generalized to be used to read other configs?) - DONE
 6. Create a couple more plugins
 7. Eventually add Windows support
-8. Re-work ILCMD and implement brain.py
 9. Implement logger algorithm
 10. Create cyclic gen plugin
 11. Create cleanhands plugin (probably in Perl)
 12. Create frame_mkr.py script
 13. Add autorun functionality
-14. Create config.yaml for all coldheart tools/touches (should have input parameters etc) *PRE-EXISTING XMLs WILL BE USED*
 15. Create some C ncurses tests for future IL CLI revamp - IN PROGRESS

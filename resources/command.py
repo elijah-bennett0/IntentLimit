@@ -73,6 +73,7 @@ class ILCMD(cmd.Cmd):
 			newCtx = self.defaultContext
 		self.ctx = newCtx
 		if Class:
+			# Gotta love the amount of non-pythonic shit im doin here
 			self.__class__ = type('ToolCtx',(ILCMD, Class),{})
 		else:
 			self.__class__ = type('ILCMD',(ILCMD,),{})
@@ -156,10 +157,11 @@ class ILCMD(cmd.Cmd):
 	def do_use(self, arg):
 		"""Use A Specified Plugin Or Tool"""
 		if arg in loadedPlugins:
-			func = loadedPlugins[arg]
+			func, path = loadedPlugins[arg][0], loadedPlugins[arg][1]
 			config = readConfig(os.path.join(self.plugDir,arg,"config.yaml"))
 			self.setContext(CmdCtx(config['name'],config['type']), PluginCtx)
 			self.__class__ = type('PluginCtx',(ILCMD,PluginCtx),{})
+			print(func)
 			func(self.io)
 		elif arg in loadedTools:
 			func, path = loadedTools[arg][0], loadedTools[arg][1]

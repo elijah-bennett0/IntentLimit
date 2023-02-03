@@ -28,5 +28,3 @@ def bin_analysis(handler):
 	handler.Print('s', "Test")
 ###
 
-if __name__ == "__main__":
-	pass

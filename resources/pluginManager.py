@@ -8,6 +8,7 @@
 
 ### Imports
 import os
+import sys
 from iohandler import *
 from env import supportsColors
 ###
@@ -29,33 +30,34 @@ class Manager():
 		self.pluginDir = plugDir
 		self.toolDir   = toolDir
 		self.handler   = IOhandler(supportsColors())
-		self.supported = {'.py':'', '.pl':'perl ', '.sh':'./'}
+		self.supported = {'.py':''}#, '.pl':'perl ', '.sh':'./'}
 
 	def loadPlugins(self):
-		plugins = [x for x in os.listdir(self.pluginDir) if os.path.splitext(x)[1] in self.supported and "init" not in x and "template" not in x]
-		self.handler.Print('i', "Found {} plugin(s)".format(len(plugins)))
 		self.handler.Print('i', "Loading plugins...")
-		for plugin in plugins:
-			if os.path.splitext(plugin)[1] == '.py':
-				try:
-					name, t = os.path.splitext(plugin)
-					module = getattr(__import__(name, fromlist=[name]), name)
-					loadedPlugins[name] = module
-				except Exception as e:
 
-					self.handler.Print('f', "Could Not Load: %s" % name)
-					self.handler.Print('c', str(e))
+		for dir in os.listdir(self.pluginDir):
+			if os.path.isdir(os.path.join(self.pluginDir, dir)) and not dir.startswith("_"):
+				files = os.listdir(os.path.join(self.pluginDir, dir))
+				for file in files:
+					if os.path.splitext(file)[1] in self.supported and "init" not in file and not (file == "__pycache__"):
+						try:
+							name, t = os.path.splitext(file)
+							# ehhhhhhhhhhhhh
+							module = getattr(__import__("%s.%s"%(name,name),fromlist=["%s.%s"%(name,name)]), name)
+							configPath = os.path.join(self.pluginDir, dir, "config.yaml")
+							loadedPlugins[name] = [module, configPath]
+						except Exception as e:
+							self.handler.Print('f', "Could Not Load: %s" % name)
+							self.handler.Print('c', str(e))
 		self.handler.Print('s', "Loaded {} plugin(s)".format(len(loadedPlugins)))
 
 	def loadTools(self):
 		self.handler.Print('i', "Loading tools...")
 		categories = os.listdir(self.toolDir)
-		numTools = 0
 		for category in categories:
 			toolNames = os.listdir(os.path.join(self.toolDir, category))
 			for toolName in toolNames:
 				tools = [x for x in os.listdir(os.path.join(self.toolDir, category, toolName)) if os.path.splitext(x)[1] in self.supported and "init" not in x and "template" not in x]
-				numTools += 1
 				for tool in tools:
 					if os.path.splitext(tool)[1] == '.py':
 						try:
@@ -66,7 +68,6 @@ class Manager():
 						except Exception as e:
 							self.handler.Print('f', "Could Not Load: %s" % name)
 							self.handler.Print('c', str(e))
-		self.handler.Print('i', "Found {} tool(s)".format(numTools))
 		self.handler.Print('s', "Loaded {} tool(s)\n".format(len(loadedTools)))
 
 	def createPlugin(self, arg):

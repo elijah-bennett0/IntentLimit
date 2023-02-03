@@ -37,6 +37,3 @@ def dorker(handler):
 
 	handler.Print('s', "Enter this string into Google:\n\t=> {}".format(string))
 ###
-
-if __name__ == "__main__":
-	dorker()

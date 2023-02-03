@@ -23,12 +23,13 @@ IL_CONFIG    = os.path.join(IL_DIR, "config.yaml")
 
 ### Path Stuff
 addPath(RESOURCE_DIR)
-addPath(PLUGIN_DIR)
+addPath(PLUGIN_DIR) # might not need these last two, idk dont feel like figuring it out rn
 addPath(TOOL_DIR)
 
-# This is to add the path of each tool individually.
-# Did this because the __import__ method was not working with tool loading.
+# This is to add the path of each tool/plugin individually.
+# Did this because the __import__ method was not working.
 # Maybe find a more elegant way to do this?
+addPluginDirs(PLUGIN_DIR)
 addToolDirs(TOOL_DIR)
 ###
 

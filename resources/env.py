@@ -12,7 +12,7 @@ import sys
 import subprocess
 ###
 
-__all__ = ["resizeConsole", "setupCorePaths", "addPath", "supportsColors", "addToolDirs"]
+__all__ = ["resizeConsole", "setupCorePaths", "addPath", "supportsColors", "addToolDirs", "addPluginDirs"]
 
 ### Code
 def resizeConsole(r, c):
@@ -26,6 +26,10 @@ def setupCorePaths(ildir):
 
 def addPath(dir):
 	sys.path.append(dir)
+
+def addPluginDirs(dir):
+	for name in os.listdir(dir):
+		addPath(os.path.join(dir, name))
 
 def addToolDirs(dir):
 	for cat in os.listdir(dir):

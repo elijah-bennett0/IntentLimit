@@ -107,7 +107,7 @@ class IOhandler():
 		cmds = args['commands']
 		self.write("\n")
 		for cmd in cmds:
-			cmdStr = "{:10}: {:30}\n".format(cmd[0], cmd[1])
+			cmdStr = "  {:10}: {:30}\n".format(cmd[0], cmd[1])
 			self.write(cmdStr)
 		self.write("\n")
 

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 MIT License
 
@@ -22,54 +21,35 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-@Description		: Environment Operations For IntentLimit
-@Author			: Ginsu
-@Date			: 6/22/22
-@Version		: 2.0
+@Description 	: Packet capture techniques
+@Author		: Ginsu, RTFM
+@Date		: 6/15/22
+@Version	: 1.0
 """
 
 ### Imports
-import os
-import sys
-import subprocess
+import subprocess as sp
 ###
 
-__all__ = ["resizeConsole", "setupCorePaths", "addPath", "supportsColors", "addToolDirs", "addPluginDirs"]
+__all__ = ["pack_cap"]
 
 ### Code
-def resizeConsole(r: int, c: int):
-	ret = subprocess.call("printf '\e[8;%s;%st'" % (r, c), shell=True)
-	del ret
+def pack_cap():
+	print("Mini packet capturer")
+	print("-----------------------")
+	print("Modes: (1) By portrange (2) By IP")
+	mode = int(input("Mode: "))
+	iface = input("Interface name: ")
+	if mode == 1:
+		ports = input("Range ex. 22-23 : ")
+		cmd = "tcpdump -nvvX -s0 -i {} tcp portrange {}".format(iface, ports)
+	elif mode == 2:
+		ip = input("IP: ")
+		cmd = "tcpdump -I {} -tttt dst {}".format(iface, ip)
 
-def setupCorePaths(ildir: str) -> tuple:
-	IL_FILE = os.path.realpath(ildir)
-	IL_DIR = os.path.dirname(IL_FILE)
-	return (IL_FILE, IL_DIR)
-
-def addPath(dir):
-	sys.path.append(dir)
-
-<<<<<<< HEAD
-def supportsColors() -> bool:
-=======
-def addPluginDirs(dir):
-	for name in os.listdir(dir):
-		addPath(os.path.join(dir, name))
-
-def addToolDirs(dir):
-	for cat in os.listdir(dir):
-		for tool in os.listdir(os.path.join(dir, cat)):
-			addPath(os.path.join(dir, cat, tool))
-
-def supportsColors():
->>>>>>> 8c930fa228ae948a3c4199c9385e472cc988d51a
-	# Not too in depth but it works enuff.. probably
-	max_colors = int(subprocess.getoutput('tput colors'))
-	if max_colors > 0:
-		return True
-	else:
-		return False
+	print("[*] Running plugin...")
+	sp.call(cmd, shell=True)
 ###
 
 if __name__ == "__main__":
-	pass
+	pack_cap()

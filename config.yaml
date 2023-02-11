@@ -17,14 +17,18 @@ default_dirs:
   - __init__.py
 
  plugins:
-  - __init__.py
-  - bin_analysis.py
-  - dorker.py
-  - msf_basic.py
-  - pack_cap.py
-  - sweep.sh
-  - template.py
-  - tunnel.py
+  bin_analysis:
+   - bin_analysis.py
+  dorker:
+   - dorker.py
+  msf_basic:
+   - msf_basic.py
+  pack_cap:
+   - pack_cap.py
+  sweep:
+   - sweep.sh
+  tunnel:
+   - tunnel.py
 
  tools:
   analysis:

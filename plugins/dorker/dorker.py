@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 MIT License
 
@@ -22,54 +21,41 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-@Description		: Environment Operations For IntentLimit
-@Author			: Ginsu
-@Date			: 6/22/22
-@Version		: 2.0
+@Description 	: Useful Google dorks
+@Author		: Ginsu
+@Date		: 6/16/22
+@Version	: 1.0
 """
 
 ### Imports
-import os
-import sys
-import subprocess
+
 ###
 
-__all__ = ["resizeConsole", "setupCorePaths", "addPath", "supportsColors", "addToolDirs", "addPluginDirs"]
-
+__all__ = ["dorker"]
 ### Code
-def resizeConsole(r: int, c: int):
-	ret = subprocess.call("printf '\e[8;%s;%st'" % (r, c), shell=True)
-	del ret
-
-def setupCorePaths(ildir: str) -> tuple:
-	IL_FILE = os.path.realpath(ildir)
-	IL_DIR = os.path.dirname(IL_FILE)
-	return (IL_FILE, IL_DIR)
-
-def addPath(dir):
-	sys.path.append(dir)
-
-<<<<<<< HEAD
-def supportsColors() -> bool:
-=======
-def addPluginDirs(dir):
-	for name in os.listdir(dir):
-		addPath(os.path.join(dir, name))
-
-def addToolDirs(dir):
-	for cat in os.listdir(dir):
-		for tool in os.listdir(os.path.join(dir, cat)):
-			addPath(os.path.join(dir, cat, tool))
-
-def supportsColors():
->>>>>>> 8c930fa228ae948a3c4199c9385e472cc988d51a
-	# Not too in depth but it works enuff.. probably
-	max_colors = int(subprocess.getoutput('tput colors'))
-	if max_colors > 0:
-		return True
+def dorker(handler):
+	print("Mini Google Dorker")
+	print("------------------")
+	print("(1) Pages linked to URL")
+	print("(2) Pages related to URL")
+	print("(3) Files of specified TYPE")
+	print("(4) Phonebook listings of NAME")
+	option = int(input("\nChoice: "))
+	ops = {1:"link: ", 
+	       2:"related: ",
+	       3:"filetype: ",
+               4:"phonebook: "}
+	if option in range(1,3):
+		url = input("URL: ")
+		string = ops[option] + url
+	elif option == 3:
+		file = input("Filetype: ")
+		string = ops[option] + file
+	# Not gonna bother with exception handling, if u mess it up
+	# ur dumb
 	else:
-		return False
-###
+		name = input("Name: ")
+		string = ops[option] + name
 
-if __name__ == "__main__":
-	pass
+	handler.Print('s', "Enter this string into Google:\n\t=> {}".format(string))
+###

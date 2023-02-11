@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 MIT License
 
@@ -22,54 +21,28 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-@Description		: Environment Operations For IntentLimit
-@Author			: Ginsu
-@Date			: 6/22/22
-@Version		: 2.0
+@Description 	: Simple tunneler
+@Author		: Ginsu
+@Date		: 6/16/22
+@Version	: 1.0
 """
 
 ### Imports
-import os
-import sys
-import subprocess
+import subprocess as sp
 ###
 
-__all__ = ["resizeConsole", "setupCorePaths", "addPath", "supportsColors", "addToolDirs", "addPluginDirs"]
+__all__ = ["tunnel"]
 
 ### Code
-def resizeConsole(r: int, c: int):
-	ret = subprocess.call("printf '\e[8;%s;%st'" % (r, c), shell=True)
-	del ret
-
-def setupCorePaths(ildir: str) -> tuple:
-	IL_FILE = os.path.realpath(ildir)
-	IL_DIR = os.path.dirname(IL_FILE)
-	return (IL_FILE, IL_DIR)
-
-def addPath(dir):
-	sys.path.append(dir)
-
-<<<<<<< HEAD
-def supportsColors() -> bool:
-=======
-def addPluginDirs(dir):
-	for name in os.listdir(dir):
-		addPath(os.path.join(dir, name))
-
-def addToolDirs(dir):
-	for cat in os.listdir(dir):
-		for tool in os.listdir(os.path.join(dir, cat)):
-			addPath(os.path.join(dir, cat, tool))
-
-def supportsColors():
->>>>>>> 8c930fa228ae948a3c4199c9385e472cc988d51a
-	# Not too in depth but it works enuff.. probably
-	max_colors = int(subprocess.getoutput('tput colors'))
-	if max_colors > 0:
-		return True
-	else:
-		return False
+def tunnel():
+	print("Mini Simple Tunneler")
+	print("--------------------")
+	lport = input("Port to listen on: ")
+	ip = input("IP to forward to: ")
+	fport = input("Port to forward to: ")
+	cmd = "socat TCP4:LISTEN:{} TCP:{}:{}".format(lport, ip, fport)
+	sp.call(cmd, shell=True)
 ###
 
 if __name__ == "__main__":
-	pass
+	tunnel()

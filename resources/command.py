@@ -90,12 +90,6 @@ class ILCMD(cmd.Cmd):
 			prompt = self.promptpre + context + PROMPT_POST
 		self.prompt = prompt
 
-<<<<<<< HEAD
-	def setContext(self, newCtx: "CmdCtx(name, type)"):
-		if newCtx is None:
-			newCtx = self.defaultContext
-		self.ctx: "A CmdCtx instance from context.py" = newCtx
-=======
 	def setContext(self, newCtx, Class):
 		if newCtx is None:
 			newCtx = self.defaultContext
@@ -106,7 +100,6 @@ class ILCMD(cmd.Cmd):
 		else:
 			self.__class__ = type('ILCMD',(ILCMD,),{})
 		self.setPrompt()
->>>>>>> 8c930fa228ae948a3c4199c9385e472cc988d51a
 
 	def getContext(self) -> "A CmdCtx instance from context.py":
 		return self.ctx

@@ -49,9 +49,6 @@ def setupCorePaths(ildir: str) -> tuple:
 def addPath(dir):
 	sys.path.append(dir)
 
-<<<<<<< HEAD
-def supportsColors() -> bool:
-=======
 def addPluginDirs(dir):
 	for name in os.listdir(dir):
 		addPath(os.path.join(dir, name))
@@ -62,7 +59,6 @@ def addToolDirs(dir):
 			addPath(os.path.join(dir, cat, tool))
 
 def supportsColors():
->>>>>>> 8c930fa228ae948a3c4199c9385e472cc988d51a
 	# Not too in depth but it works enuff.. probably
 	max_colors = int(subprocess.getoutput('tput colors'))
 	if max_colors > 0:

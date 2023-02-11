@@ -29,11 +29,7 @@ SOFTWARE.
 """
 
 ### Imports
-<<<<<<< HEAD
 #from command import *
-=======
-
->>>>>>> 8c930fa228ae948a3c4199c9385e472cc988d51a
 ###
 
 __all__ = ["CmdCtx", "ToolCtx", "PluginCtx"]
@@ -87,11 +83,7 @@ class CmdCtx:
 	def getPlugins(self) -> list:
 		return []
 
-<<<<<<< HEAD
-class ToolCtx(base):
-=======
 class ToolCtx(CmdCtx):
->>>>>>> 8c930fa228ae948a3c4199c9385e472cc988d51a
 	"""
 	This takes ILCMD to bring in the core functionality of IL plus the context commands
 	specified here.

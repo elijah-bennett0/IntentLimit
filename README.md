@@ -4,4 +4,4 @@ different tools, exploits, scripts, etc I need for pentesting. This project is n
 even close to being finished but it's making progress. 
 
 Ps. Don't mind how shitty the code is, this is basically a beta and I don't do much
-oop so it's basically a big learning experience.
+oop so it's a big learning experience.

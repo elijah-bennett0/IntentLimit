@@ -13,3 +13,4 @@
 12. Create frame_mkr.py script
 13. Add autorun functionality
 15. Create some C ncurses tests for future IL CLI revamp - IN PROGRESS
+16. Plugin specific help/context menus

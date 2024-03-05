@@ -28,13 +28,19 @@ Version: 2.0
 '''
 ### Imports
 import os
-import yaml
 from iohandler import *
 ###
 
 __all__ = ["readConfig", "checkAndLoad"]
 
-def readConfig(config: str) -> dict:
+def readConfig(config):
+
+	try:
+		import yaml
+	except ImportError:
+		iohandler.Print('f', "Dependency missing: yaml")
+		return
+
 	with open(config) as file:
 		try:
 			_config = yaml.safe_load(file)
@@ -42,11 +48,17 @@ def readConfig(config: str) -> dict:
 			print(e)
 	return _config
 
-def checkAndLoad(config: dict, iohandler: "iohandler class from iohandler.py", PATH: str):
+def checkAndLoad(config, iohandler, PATH):
 	# Should probably try to optimize this a bit
 
 	missing = []
 	dirs = config['default_dirs']
+	deps = config['dependencies']
+	for dep in deps:
+		try:
+			__import__(dep)
+		except:
+			iohandler.Print('f', "Dependency missing:", dep)
 	for _type, _list in dirs.items():
 		if type(_list) == dict:
 			for name, files in _list.items():

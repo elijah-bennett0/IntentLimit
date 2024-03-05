@@ -28,14 +28,17 @@ SOFTWARE.
 @Version		: 1.0
 """
 
-### Imports
-#from command import *
+### Importsa
+#from command import ILCMD : cant do due to circular import
+import cmd
+import os
+from integrityCheck import *
 ###
 
 __all__ = ["CmdCtx", "ToolCtx", "PluginCtx"]
 
 ### Code
-class CmdCtx:
+class CmdCtx(cmd.Cmd):
 	"""
 	Contexting
 	"""
@@ -43,10 +46,10 @@ class CmdCtx:
 		self.setName(name)
 		self.setType(type)
 
-	def getName(self) -> str:
+	def getName(self):
 		return self.name
 
-	def getType(self) -> str:
+	def getType(self):
 		return self.type
 
 	def setName(self, name):
@@ -55,16 +58,19 @@ class CmdCtx:
 	def setType(self, type):
 		self.type = type
 
-	def lookupCmd(self, name: str) -> "Returns a function reference":
+	def lookupCmd(self, name):
+		"""Returns a function reference"""
 		return getattr(self, "do_" + name.lower())
 
-	def lookupCompFunc(self, name: str) -> "Returns a function reference":
+	def lookupCompFunc(self, name):
+		"""Returns a function reference"""
 		return getattr(self, "complete_" + name.lower())
 
-	def lookupHelpFunc(self, name: str) -> "Returns a function reference":
+	def lookupHelpFunc(self, name):
+		"""Returns a function reference"""
 		print(getattr(self, "help_" + name.lower()))
 
-	def getNames(self) -> list:
+	def getNames(self):
 		names = []
 		classes = [self.__class__]
 		while classes:
@@ -74,67 +80,32 @@ class CmdCtx:
 			names += dir(aclass)
 		return names
 
-	def setPlugin(self, unused):
-		pass
+	def setPlugin(self, func, *args):
+		self.plugin = func(*args)
 
-	def getActive(self) -> str:
+	def getActive(self):
 		return self.getName()
 
-	def getPlugins(self) -> list:
-		return []
+	def getPlugins(self):
+		return self.plugin
+
+	def TEST(self):
+		pass
 
 class ToolCtx(CmdCtx):
 	"""
 	This takes ILCMD to bring in the core functionality of IL plus the context commands
 	specified here.
 
-	EX:
-	- set
-		Set a variable (defined in the config.yaml file for the tool)
+	** Tools will take control of IO and run themselves. No parameter
+		setting like in a plugin
+
 	- back
 		Return to the previous context
-	- use
-		Use a part of the tool (ex. exploits, backdoors, etc)
-	- run
-		Run the selected tool
 	"""
 
-	"""
-	Set Command
-	"""
-	def help_set(self):
-		usage = ["set [param]",
-			"Set A Tool Parameter"]
-		self.io.print_usage(usage)
-
-	def do_set(self, arg):
-		"""Set a Tool Parameter"""
-		# Make method to load parameters in another script, import it and implement it here
-
-	"""
-	Use Command
-	"""
-	def help_use(self):
-		usage = ["use [name]",
-			"Use An Exploit Or Another Program In The Tool."]
-		self.io.print_usage(usage)
-
-	def do_use(self, arg):
-		"""Use An Exploit Or Another Program In The Tool."""
-		pass # WRITE USE METHOD FOR THE TOOLS INSIDE THE SUB-FRAMEWORKS (Ex. using eternalblue in ColdHeart)
-
-	"""
-	Run Command
-	"""
-	def help_run(self):
-		usage = ["run",
-			"Run The Selected Tool/Program"]
-
-	def do_run(self):
-		pass
-
-	def do_test(self, arg):
-		print("CONTEXT SUCCESS")
+	#def do_test(self, arg):
+	#	print("TOOL CONTEXT SUCCESS")
 
 class PluginCtx(CmdCtx):
 	"""
@@ -150,21 +121,67 @@ class PluginCtx(CmdCtx):
 	"""
 	Set Command
 	"""
+	def getParams(self, args):
+		params = {}
+		self.configPath = os.path.join(self.plugDir, self.ctx.getActive(), 'config.yaml')
+		self.config = readConfig(self.configPath)
+		for param in self.config['params']:
+			params.update({param:'None'})
+
+		if args[0] is None:
+			pass
+		else:
+			if args[0] not in params:
+				self.io.Print('f', "Invalid parameter!")
+			else:
+				params[args[0]] = args[1]
+		return params
+
 	def help_set(self):
 		usage = ["set [param]",
 			"Set A Plugin Parameter"]
 		self.io.print_usage(usage)
 
+	def do_set(self, argStr):
+		"""Set a parameter within the selected plugin"""
+		args = argStr.split(' ')
+		if len(args) < 2:
+			self.io.Print('f', "Not enough arguments!")
+		else:
+			self.params = self.getParams(args)
+		#print(self.ctx.getActive()) #<<<< WORKS
+		# now just need to get method to read required params from
+		# config file and set up error handling.
+		# EX: if args[0] not in configParams: error
+
+	def help_options(self):
+		usage = ["options",
+			"Shows parameters and their values"]
+		self.io.print_usage(usage)
+
+	def do_options(self, arg):
+		"""Show plugin parameters and their values"""
+		if not hasattr(self, 'params'):
+			self.params = self.getParams([None, None])
+		for k,v in self.params.items():
+			print('\n\t')
+			self.io.Print('i', "{}\t{}\n".format(k,v))
+
 	"""
 	Run Command
 	"""
 	def help_run(self):
-		usage = ["run",
+		usage = ["run [plugin]",
 			"Run The Selected Plugin"]
 		self.io.print_usage(usage)
 
-	def do_run(self):
-		pass
+	def do_run(self, arg):
+		"""Run the selected plugin"""
+		func = self.loadedPlugins[self.ctx.getName()][0]
+		func(self.io, self.params)
+
+	#def do_test(self, arg):
+	#	print("PLUGIN CONTEXT SUCCESS")
 
 ###
 

@@ -117,7 +117,7 @@ class IOhandler():
 		line = colored + " " + text + end # Bug i think. *args might do weird shit
 		self.write(line)
 
-	def get_input(self, text: str) -> str:
+	def get_input(self, text):
 		self.Print('q', text, '')
 		i = input()
 		return i

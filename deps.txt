@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-=======
 cpan XML::LibXML
->>>>>>> 8c930fa228ae948a3c4199c9385e472cc988d51a
 pyyaml
+pwnlib

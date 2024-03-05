@@ -1,3 +1,7 @@
 description: "Generic Small Tools For Quick Tasks"
-name: Bin_Analysis
+name: bin_analysis
 type: Plugin
+
+params:
+  - binpath
+

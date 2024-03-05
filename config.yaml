@@ -48,6 +48,13 @@ default_dirs:
   reverseshell:
    - ShallowDawn
 
+dependencies:
+ - yaml
+ - pwnlib
+
+otherdependencies:
+ - cpan XML::LibXML
+
 description: "A toolbox able to launch ctrlaltech tools quick and easy."
 name: IntentLimit
 type: IntentLimit

@@ -67,16 +67,19 @@ class ILCMD(cmd.Cmd):
 	def __init__(self, baseDir=None, plugDir=None, toolDir=None, stdin=None, stdout=None, stderr=None):
 		self.baseDir, self.plugDir, self.toolDir, = baseDir, plugDir, toolDir
 		self.init_io(supportsColors(), stdin=stdin, stdout=stdout, stderr=stdout)
-		self.defaultContext: ClassVar = CmdCtx("IntentLimit", "IntentLimit")
+		self.defaultContext = CmdCtx("IntentLimit", "IntentLimit")
 		self.manager: ClassVar = Manager(baseDir=baseDir, plugDir=plugDir, toolDir=toolDir)
 		self.promptpre = PROMPT_PRE
 		self.setContext(None, None)
 
+		self.loadedPlugins = loadedPlugins
+		self.loadedTools = loadedTools
+
 	"""
 	IO Handling
 	"""
-	def init_io(self, colors: bool, stdin=None, stdout=None, stderr=None):
-		self.io: "A IOHandler instance from iohandler.py" = IOhandler(colors: bool, stdin=stdin, stdout=stdout)
+	def init_io(self, colors, stdin=None, stdout=None, stderr=None):
+		self.io = IOhandler(colors, stdin=stdin, stdout=stdout)
 
 	"""
 	Context/Prompt Operations
@@ -92,13 +95,20 @@ class ILCMD(cmd.Cmd):
 
 	def setContext(self, newCtx, Class):
 		if newCtx is None:
-			newCtx = self.defaultContext
-		self.ctx = newCtx
-		if Class:
-			# Gotta love the amount of non-pythonic shit im doin here
-			self.__class__ = type('ToolCtx',(ILCMD, Class),{})
+			self.ctx = self.defaultContext
 		else:
-			self.__class__ = type('ILCMD',(ILCMD,),{})
+			if newCtx[1] == 'Plugin':
+				if Class:
+					c = CmdCtx(newCtx[0], newCtx[1])
+					self.__class__ = type('PluginCtx',(ILCMD, PluginCtx),{})
+					#self.__bases__ = (cmd.Cmd,ILCMD,CmdCtx)
+				else:
+					self.__class__ = type('ILCMD',(ILCMD,),{})
+				self.ctx = PluginCtx(newCtx[0], newCtx[1])
+			else:
+				self.ctx = ToolCtx(newCtx[0], newCtx[1])
+				if Class:
+					self.__class__ = type('ToolCtx',(ILCMD, ToolCtx),{})
 		self.setPrompt()
 
 	def getContext(self) -> "A CmdCtx instance from context.py":
@@ -181,14 +191,11 @@ class ILCMD(cmd.Cmd):
 		if arg in loadedPlugins:
 			func, path = loadedPlugins[arg][0], loadedPlugins[arg][1]
 			config = readConfig(os.path.join(self.plugDir,arg,"config.yaml"))
-			self.setContext(CmdCtx(config['name'],config['type']), PluginCtx)
-			self.__class__ = type('PluginCtx',(ILCMD,PluginCtx),{})
-			print(func)
-			func(self.io)
+			self.setContext((config['name'],config['type']), PluginCtx)
 		elif arg in loadedTools:
 			func, path = loadedTools[arg][0], loadedTools[arg][1]
-			config = readConfig(path)
-			self.setContext(CmdCtx(config['name'],config['type']), ToolCtx)
+			config = readConfig(os.path.join(self.toolDir,arg,"config.yaml"))
+			self.setContext((config['name'],config['type']), ToolCtx)
 			func()
 		else:
 			self.help_use()
@@ -310,12 +317,19 @@ class ILCMD(cmd.Cmd):
 			except AttributeError:
 				pass
 		else:
+			self.io.Print('i', "Default Commands")
 			cmds = self.get_help_lists(self.get_names(), self)
 			cmdlist = {"title":"Core Commands","commands":cmds}
 			self.io.print_cmd_list(cmdlist)
 
 			if self.ctx.getName() != self.defaultContext.getName():
-				cmds = self.get_help_lists(self.ctx.getNames(), self.ctx)
+				#print("NOT DEFAULT CONTEXT")
+				#print(self.ctx)
+				#print(self.ctx.getNames())
+				#print(PluginCtx.__class__)
+				self.io.Print('i', "Context Specific Commands")
+				cmds = self.get_help_lists(self.ctx.getNames(), PluginCtx)
+				#print("CMDS:",cmds)
 				cmdlist = {"title":"%s Commands"%self.ctx.getType(),"commands":cmds}
 				self.io.print_cmd_list(cmdlist)
 

@@ -28,6 +28,7 @@ SOFTWARE.
 """
 
 ### Imports
+import os
 import subprocess as sp
 from datetime import *
 ###
@@ -48,8 +49,10 @@ def bin_analysis(handler, params):
 	#print('='*80)
 	print('\n')
 	out3, out4, out5 = objdump(handler, binary)
+	print('\n')
+	out6 = strace(handler, binary)
 	# outputs being saved so we can write to log file...
-	# a lot of commands are dumping garbage on
+	# a lot of commands are dumping garbage out
 
 def file(handler, binary):
 	out = sp.getoutput(['file %s'%binary])
@@ -98,8 +101,26 @@ def objdump(handler, binary):
 	return out1,out2,out3
 
 def strace(handler, binary):
-	pass
+	handler.Print('i', "Dumping strace info (if installed)...PRESS ENTER\n")
+	out = sp.getoutput(['strace %s'%binary])
+	if "not found" in out:
+		q = handler.get_input("strace not found, would you like to install? y/n: ")
+		if 'y' in q:
+			try:
+				os.system('sudo apt install strace')
+				handler.Print('i', "Done.")
+
+			except:
+				handler.Print('f', "Error installing, try running as root?")
+		else:
+			handler.Print('i', "Skipping strace...")
+	else:
+		for line in out.split('\n'):
+			handler.Print('s', line)
+		return out
+
 def ltrace(handler, binary):
+	# do more research
 	pass
 def hexdump(handler, binary):
 	pass

@@ -1,6 +1,7 @@
 IntentLimit will be a sort of personal toolbox for myself that contains all the 
 different tools, exploits, scripts, etc I need for pentesting. This project is not
-even close to being finished but it's making progress. 
+even close to being finished but it's making progress. Also, this takes inspiration from the FuzzBunch
+framework released in the shadowbroker leak.
 
 Ps. Don't mind how shitty the code is, this is basically a beta and I don't do much
 oop so it's a big learning experience.

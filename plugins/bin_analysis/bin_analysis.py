@@ -53,6 +53,7 @@ def bin_analysis(handler, params):
 	out6 = strace(handler, binary)
 	# outputs being saved so we can write to log file...
 	# a lot of commands are dumping garbage out
+	log(handler, out1, out2, out3, out4, out5, out6)
 
 def file(handler, binary):
 	out = sp.getoutput(['file %s'%binary])
@@ -121,7 +122,23 @@ def strace(handler, binary):
 
 def ltrace(handler, binary):
 	# do more research
+	# example command: ltrace -x "@libc.so.6" -o out1.txt ./executable
+	# -x : choose which functions to trace
+	# -o : output file (optional)
+	#
 	pass
 def hexdump(handler, binary):
 	pass
 ###
+def log(handler, *args):
+	# allow user to change logpath at plugin start?
+	# store in config.yaml
+	log = open("log.txt", 'w+')
+	for arg in args:
+		if arg is None:
+			pass
+		else:
+			for line in arg:
+				log.write(line)
+	log.close()
+	handler.Print('i', "Output logged.")

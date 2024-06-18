@@ -39,6 +39,8 @@ __all__ = ["bin_analysis"]
 def bin_analysis(handler, params):
 	name = str(datetime.now()) # with open file: write all outs
 	binary = params["binpath"]
+	# still need to setup log location via config.yaml
+	log_loc = handler.get_input("LOG Location: ")
 	print('\n')
 	handler.Print('i', "Getting basic file info...\n")
 	out1 = file(handler, binary)
@@ -53,7 +55,7 @@ def bin_analysis(handler, params):
 	out6 = strace(handler, binary)
 	# outputs being saved so we can write to log file...
 	# a lot of commands are dumping garbage out
-	log(handler, out1, out2, out3, out4, out5, out6)
+	log(handler, log_loc, out1, out2, out3, out4, out5, out6)
 
 def file(handler, binary):
 	out = sp.getoutput(['file %s'%binary])
@@ -130,10 +132,10 @@ def ltrace(handler, binary):
 def hexdump(handler, binary):
 	pass
 ###
-def log(handler, *args):
+def log(handler, location, *args):
 	# allow user to change logpath at plugin start?
 	# store in config.yaml
-	log = open("log.txt", 'w+')
+	log = open(location+"/log-%s.txt"%datetime.now(), 'w+')
 	for arg in args:
 		if arg is None:
 			pass

@@ -177,8 +177,18 @@ class PluginCtx(CmdCtx):
 
 	def do_run(self, arg):
 		"""Run the selected plugin"""
-		func = self.loadedPlugins[self.ctx.getName()][0]
-		func(self.io, self.params)
+		plugin = self.loadedPlugins[self.ctx.getName()]
+		if 'perl ' not in plugin[1] and './' not in plugin[1]:
+			func = plugin[0]
+			func(self.io, self.params)
+		else:
+			# needa fix this garbage. temp workaround
+			if plugin[1] == 'perl ':
+				ext = '.pl'
+			elif plugin[1] == './':
+				ext = '.sh'
+			cmd = plugin[1] + ' ' + plugin[0] + ext
+			os.system(cmd) # replace with subprocess?
 
 	#def do_test(self, arg):
 	#	print("PLUGIN CONTEXT SUCCESS")

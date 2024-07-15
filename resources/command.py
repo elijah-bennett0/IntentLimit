@@ -189,7 +189,10 @@ class ILCMD(cmd.Cmd):
 	def do_use(self, arg):
 		"""Use A Specified Plugin Or Tool"""
 		if arg in loadedPlugins:
-			func, path = loadedPlugins[arg][0], loadedPlugins[arg][1]
+			if os.path.exists(loadedPlugins[arg][1]):
+				func, path = loadedPlugins[arg][0], loadedPlugins[arg][1]
+			else:
+				pass
 			config = readConfig(os.path.join(self.plugDir,arg,"config.yaml"))
 			self.setContext((config['name'],config['type']), PluginCtx)
 		elif arg in loadedTools:

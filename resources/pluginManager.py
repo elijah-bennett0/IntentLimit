@@ -52,7 +52,7 @@ class Manager():
 		self.pluginDir = plugDir
 		self.toolDir   = toolDir
 		self.handler   = IOhandler(supportsColors())
-		self.supported = {'.py':''}#, '.pl':'perl ', '.sh':'./'}
+		self.supported = {'.py':'', '.pl':'perl '} #, '.sh':'./'}
 
 	def loadPlugins(self):
 		self.handler.Print('i', "Loading plugins...")
@@ -65,9 +65,14 @@ class Manager():
 						try:
 							name, t = os.path.splitext(file)
 							# ehhhhhhhhhhhhh
-							module = getattr(__import__("%s.%s"%(name,name),fromlist=["%s.%s"%(name,name)]), name)
-							configPath = os.path.join(self.pluginDir, dir, "config.yaml")
-							loadedPlugins[name] = [module, configPath]
+							# still need to add this functionality to reload(), loadNew()
+							if t == '.py':
+								module = getattr(__import__("%s.%s"%(name,name),fromlist=["%s.%s"%(name,name)]), name)
+								configPath = os.path.join(self.pluginDir, dir, "config.yaml")
+								loadedPlugins[name] = [module, configPath]
+							else:
+								configPath = os.path.join(self.pluginDir, dir, "config.yaml")
+								loadedPlugins[name] = [os.path.join(self.pluginDir, dir, name), self.supported[t]] # {'test':'perl '} shitty but should work for now
 						except Exception as e:
 							self.handler.Print('f', "Could Not Load: %s" % name)
 							self.handler.Print('c', str(e))

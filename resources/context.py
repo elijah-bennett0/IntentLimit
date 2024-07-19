@@ -33,6 +33,7 @@ SOFTWARE.
 import cmd
 import os
 from integrityCheck import *
+import subprocess as sp
 ###
 
 __all__ = ["CmdCtx", "ToolCtx", "PluginCtx"]
@@ -178,18 +179,19 @@ class PluginCtx(CmdCtx):
 	def do_run(self, arg):
 		"""Run the selected plugin"""
 		plugin = self.loadedPlugins[self.ctx.getName()]
-		if 'perl ' not in plugin[1] and './' not in plugin[1]:
+		if 'perl ' not in plugin[1] and 'bash ' not in plugin[1]:
 			func = plugin[0]
 			func(self.io, self.params)
 		else:
 			# needa fix this garbage. temp workaround
 			if plugin[1] == 'perl ':
 				ext = '.pl'
-			elif plugin[1] == './':
+				cmd = plugin[1] + ' ' + plugin[0] + ext
+			elif plugin[1] == 'bash ':
 				ext = '.sh'
-			cmd = plugin[1] + ' ' + plugin[0] + ext
-			os.system(cmd) # replace with subprocess?
-
+				cmd = plugin[1] + plugin[0] + ext
+			p = sp.getoutput(cmd) # replace with subprocess?
+			print(p)
 	#def do_test(self, arg):
 	#	print("PLUGIN CONTEXT SUCCESS")
 

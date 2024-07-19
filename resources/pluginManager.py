@@ -52,7 +52,7 @@ class Manager():
 		self.pluginDir = plugDir
 		self.toolDir   = toolDir
 		self.handler   = IOhandler(supportsColors())
-		self.supported = {'.py':'', '.pl':'perl '} #, '.sh':'./'}
+		self.supported = {'.py':'', '.pl':'perl ', '.sh':'bash '}
 
 	def loadPlugins(self):
 		self.handler.Print('i', "Loading plugins...")

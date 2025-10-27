@@ -34,7 +34,7 @@ import cmd
 import string
 import subprocess
 from typing import *
-from context import *
+from il_context import CmdCtx, ToolCtx, PluginCtx
 from iohandler import *
 from exception import *
 from pluginManager import *

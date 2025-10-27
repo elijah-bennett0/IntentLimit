@@ -6,7 +6,7 @@ default_dirs:
   - banner.py
   - banners.txt
   - command.py
-  - context.py
+  - il_context.py
   - env.py
   - exception.py
   - ilcmd.py

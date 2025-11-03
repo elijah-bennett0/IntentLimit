@@ -197,7 +197,7 @@ class ILCMD(cmd.Cmd):
 			self.setContext((config['name'],config['type']), PluginCtx)
 		elif arg in loadedTools:
 			func, path = loadedTools[arg][0], loadedTools[arg][1]
-			config = readConfig(os.path.join(self.toolDir,arg,"config.yaml"))
+			config = readConfig(path)
 			self.setContext((config['name'],config['type']), ToolCtx)
 			func()
 		else:

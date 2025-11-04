@@ -301,30 +301,32 @@ class ILCMD(cmd.Cmd):
 	Help Command
 	"""
 	def get_help_lists(self, names, ctx) -> list:
-		do_cmds = list(set([name for name in names if name.startswith("do_")]))
-		do_cmds.sort()
-		return [(name[3:], str(getattr(ctx, name).__doc__)) for name in do_cmds]
+		do_cmds = sorted({name for name in names if name.startswith("do_")})
+		out = []
+		for name in do_cmds:
+			try:
+				obj = getattr(ctx, name)
+				doc = obj.__doc__ or ""
+			except:
+				doc = ""
+			out.append((name[3:], doc))
+		return out
 
 	def do_help(self, input):
 		"""Print Help"""
 		args = input.strip().split()
 		if len(args) > 0:
-			arg = args[0]
-			try:
-				func = self.ctx.lookupHelpFunc(arg)
-				func()
-			except AttributeError:
-				pass
-			try:
-				func = getattr(self, "help_" + arg.lower())
-				func()
-			except AttributeError:
-				pass
+			arg = args[0].lower()
+			func = getattr(self, f"help_{arg}", None)
+			if callable(func):
+				return func()
+			self.io.Print('f', f"No help available for '{arg}'")
+			return
 		else:
 			self.io.Print('i', "Default Commands")
-			cmds = self.get_help_lists(self.get_names(), self)
-			cmdlist = {"title":"Core Commands","commands":cmds}
-			self.io.print_cmd_list(cmdlist)
+			core_names = dir(ILCMD)
+			core_cmds = self.get_help_lists(core_names, ILCMD)
+			self.io.print_cmd_list({"title":"Core Commands","commands":core_cmds})
 
 			if self.ctx.getName() != self.defaultContext.getName():
 				#print("NOT DEFAULT CONTEXT")
@@ -332,10 +334,10 @@ class ILCMD(cmd.Cmd):
 				#print(self.ctx.getNames())
 				#print(PluginCtx.__class__)
 				self.io.Print('i', "Context Specific Commands")
-				cmds = self.get_help_lists(self.ctx.getNames(), PluginCtx)
+				dyn_names = set(dir(self.__class__)) - set(dir(ILCMD))
+				ctx_cmds = self.get_help_lists(sorted(dyn_names), self)
 				#print("CMDS:",cmds)
-				cmdlist = {"title":"%s Commands"%self.ctx.getType(),"commands":cmds}
-				self.io.print_cmd_list(cmdlist)
+				self.io.print_cmd_list({"title":"%s Commands"%self.ctx.getType(),"commands":ctx_cmds})
 
 	"""
 	Info Command

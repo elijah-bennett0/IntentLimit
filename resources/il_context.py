@@ -69,7 +69,7 @@ class CmdCtx(cmd.Cmd):
 
 	def lookupHelpFunc(self, name):
 		"""Returns a function reference"""
-		print(getattr(self, "help_" + name.lower()))
+		return getattr(self, "help_" + name.lower())
 
 	def getNames(self):
 		names = []

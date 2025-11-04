@@ -124,7 +124,7 @@ class PluginCtx(CmdCtx):
 	"""
 	def getParams(self, args):
 		params = {}
-		self.configPath = os.path.join(self.plugDir, self.ctx.getActive(), 'config.yaml')
+		self.configPath = os.path.join(self.plugDir, self.ctx.getActive().lower(), 'config.yaml')
 		self.config = readConfig(self.configPath)
 		for param in self.config['params']:
 			params.update({param:'None'})

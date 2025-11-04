@@ -40,6 +40,7 @@ def getBanner(ildir: str) -> str:
 	file = open(os.path.join(ildir, "banners.txt"), 'r')
 	banners = file.read().split("\t")
 	banner = random.choice(banners)
+	#print(banner)
 	return banner
 ###
 

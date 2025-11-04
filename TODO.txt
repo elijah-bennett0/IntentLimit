@@ -14,3 +14,4 @@
 13. Add autorun functionality
 15. Create some C ncurses tests for future IL CLI revamp - IN PROGRESS
 16. Plugin specific help/context menus
+17. Context specific commands in config files? pipe to il_context and then into command?

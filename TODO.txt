@@ -15,3 +15,4 @@
 15. Create some C ncurses tests for future IL CLI revamp - IN PROGRESS
 16. Plugin specific help/context menus
 17. Context specific commands in config files? pipe to il_context and then into command?
+18. [FIXED] Bug when using plugins. Using back command to exit plugin doesnt remove context specific commands. Dont show in help but still available..

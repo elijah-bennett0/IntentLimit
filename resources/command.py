@@ -311,7 +311,7 @@ class ILCMD(cmd.Cmd):
 		if len(args) > 0:
 			arg = args[0]
 			try:
-				func = self.ctx.lookupHelpFunction(arg)
+				func = self.ctx.lookupHelpFunc(arg)
 				func()
 			except AttributeError:
 				pass

@@ -1,3 +1,5 @@
 description: Generic Small Tools For Quick Tasks
 name: Dorker
 type: Plugin
+
+params:

@@ -101,6 +101,7 @@ class Manager():
 		'''
 		Create the basic template for a plugin
 		'''
+		# need to fix. doesnt create properly- outdated
 		try:
 			os.system("cp {}/template.py {}/{}.py".format(self.pluginDir, self.pluginDir, arg))
 			self.handler.Print('s', "Plugin created.\n")
@@ -145,29 +146,36 @@ class Manager():
 		'''
 		if _type == "plugins":
 			loadedPlugins.clear()
-			plugins = [x for x in os.listdir(self.pluginDir) if os.path.splitext(x)[1] in self.supported and "init" not in x and "template" not in x]
-			self.handler.write("\n")
-			self.handler.Print('i', "Found {} plugin(s)".format(len(plugins)))
 			self.handler.Print('i', "Loading plugins...")
-			for plugin in plugins:
-				if os.path.splitext(plugin)[1] == '.py':
-					try:
-						name, t = os.path.splitext(plugin)
-						module = getattr(__import__(name, fromlist=[name]), name)
-						loadedPlugins[name] = module
-					except Exception as e:
-						self.handler.Print('f', "Could Not Load: %s" % name)
-						self.handler.Print('c', str(e))
-			self.handler.Print('s', "Loaded {} plugin(s)\n".format(len(loadedPlugins)))
+
+			for dir in os.listdir(self.pluginDir):
+				if os.path.isdir(os.path.join(self.pluginDir, dir)) and not dir.startswith("_"):
+					files = os.listdir(os.path.join(self.pluginDir, dir))
+					for file in files:
+						if os.path.splitext(file)[1] in self.supported and "init" not in file and not (file == "__pycache__"):
+							try:
+								name, t = os.path.splitext(file)
+                                # ehhhhhhhhhhhhh
+                                # still need to add this functionality to reload(), loadNew()
+								if t == '.py':
+									module = getattr(__import__("%s.%s"%(name,name),fromlist=["%s.%s"%(name,name)]), name)
+									configPath = os.path.join(self.pluginDir, dir, "config.yaml")
+									loadedPlugins[name] = [module, configPath]
+								else:
+									configPath = os.path.join(self.pluginDir, dir, "config.yaml")
+									loadedPlugins[name] = [os.path.join(self.pluginDir, dir, name), self.supported[t]] # {'test':'perl '} shitty but should work for now
+							except Exception as e:
+								self.handler.Print('f', "Could Not Load: %s" % name)
+								self.handler.Print('c', str(e))
+			self.handler.Print('s', "Loaded {} plugin(s)".format(len(loadedPlugins)))
 		elif _type == "tools":
+			loadedTools.clear()
 			self.handler.Print('i', "Loading tools...")
 			categories = os.listdir(self.toolDir)
-			numTools = 0
 			for category in categories:
 				toolNames = os.listdir(os.path.join(self.toolDir, category))
 				for toolName in toolNames:
 					tools = [x for x in os.listdir(os.path.join(self.toolDir, category, toolName)) if os.path.splitext(x)[1] in self.supported and "init" not in x and "template" not in x]
-					numTools += 1
 					for tool in tools:
 						if os.path.splitext(tool)[1] == '.py':
 							try:
@@ -178,7 +186,6 @@ class Manager():
 							except Exception as e:
 								self.handler.Print('f', "Could Not Load: %s" % name)
 								self.handler.Print('c', str(e))
-			self.handler.Print('i', "Found {} tool(s)".format(numTools))
 			self.handler.Print('s', "Loaded {} tool(s)\n".format(len(loadedTools)))
 
 	def loadNew(self, _type):
@@ -186,25 +193,32 @@ class Manager():
 		Ignore previously loaded plugins and only load newly discovered ones
 		'''
 		if _type == "plugins":
-			plugins = [x for x in os.listdir(self.pluginDir) if x.endswith(".py") and "init" not in x and "template" not in x and os.path.splitext(x)[0] not in loadedPlugins]
+			self.handler.Print('i', "Loading new plugins...")
+
+			#print(loadedPlugins)
 			new = 0
-			if len(plugins) != 0:
-				self.handler.write("\n")
-				self.handler.Print('i', "Found {} new plugin(s)".format(len(plugins)))
-				self.handler.Print('i', "Loading plugins...")
-				for plugin in plugins:
-					if os.path.splitext(plugin)[1] == '.py':
-						try:
-							name, t = os.path.splitext(plugin)
-							module = getattr(__import__(name, fromlist=[name]), name)
-							loadedPlugins[name] = module
-							new += 1
-						except Exception as e:
-							self.handler.Print('f', "Could Not Load: %s" % name)
-							self.handler.Print('c', str(e))
-				self.handler.Print('s', "Loaded {} new plugin(s)\n".format(new))
-			else:
-				self.handler.Print('w', "No New Plugins Found!\n")
+			for dir in os.listdir(self.pluginDir):
+				if os.path.isdir(os.path.join(self.pluginDir, dir)) and not dir.startswith("_"):
+					files = os.listdir(os.path.join(self.pluginDir, dir))
+					for file in files:
+						if os.path.splitext(file)[0] not in loadedPlugins and os.path.splitext(file)[1] in self.supported and "init" not in file and not (file == "__pycache__"):
+							#print(os.path.splitext(file)[0], "NEW")
+							try:
+								name, t = os.path.splitext(file)
+								# ehhhhhhhhhhhhh
+								# still need to add this functionality to reload(), loadNew()
+								if t == '.py':
+									module = getattr(__import__("%s.%s"%(name,name),fromlist=["%s.%s"%(name,name)]), name)
+									configPath = os.path.join(self.pluginDir, dir, "config.yaml")
+									loadedPlugins[name] = [module, configPath]
+								else:
+									configPath = os.path.join(self.pluginDir, dir, "config.yaml")
+									loadedPlugins[name] = [os.path.join(self.pluginDir, dir, name), self.supported[t]] # {'test':'perl '} shitty but should work for now
+								new += 1
+							except Exception as e:
+								self.handler.Print('f', "Could Not Load: %s" % name)
+								self.handler.Print('c', str(e))
+			self.handler.Print('s', "Loaded {} new plugin(s)".format(new))
 		else:
 			categories = os.listdir(self.toolDir)
 			new = 0
@@ -218,17 +232,14 @@ class Manager():
 							if os.path.splitext(tool)[1] == '.py':
 								try:
 									name, t = os.path.splitext(tool)
+									configPath = os.path.join(self.toolDir, category, toolName, "config.yaml")
 									module = getattr(__import__(name, fromlist=[name]), name)
-									loadedTools[name] = module
+									loadedTools[name] = [module, configPath]
 									new += 1
 								except Exception as e:
 									self.handler.Print('f', "Could Not Load: %s" % name)
 									self.handler.Print('c', str(e))
-						self.handler.Print('s', "Loaded {} new tool(s)".format(new))
-						return
-					else:
-						self.handler.Print('w', "No New Tools Found!\n")
-						return
+			self.handler.Print('s', "Loaded {} new tool(s)".format(new))
 
 if __name__ == "__main__":
 	manager = Manager("/home/ginsu/Desktop/Toolbox/IntentLimit")

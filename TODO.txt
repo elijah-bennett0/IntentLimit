@@ -11,8 +11,3 @@
 10. Create cyclic gen plugin
 11. Create cleanhands plugin (probably in Perl)
 12. Create frame_mkr.py script
-13. Add autorun functionality
-15. Create some C ncurses tests for future IL CLI revamp - IN PROGRESS
-16. Plugin specific help/context menus
-17. Context specific commands in config files? pipe to il_context and then into command?
-18. [FIXED] Bug when using plugins. Using back command to exit plugin doesnt remove context specific commands. Dont show in help but still available..

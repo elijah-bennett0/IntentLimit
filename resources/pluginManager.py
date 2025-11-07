@@ -30,8 +30,11 @@ SOFTWARE.
 
 ### Imports
 import os
+import re
 import sys
+import shutil
 from iohandler import *
+from pathlib import Path
 from env import supportsColors
 ###
 
@@ -51,6 +54,7 @@ class Manager():
 		self.mainPath  = baseDir
 		self.pluginDir = plugDir
 		self.toolDir   = toolDir
+		self.templateDir = Path(self.mainPath) / "templates"
 		self.handler   = IOhandler(supportsColors())
 		self.supported = {'.py':'', '.pl':'perl ', '.sh':'bash '}
 
@@ -102,11 +106,15 @@ class Manager():
 		Create the basic template for a plugin
 		'''
 		# need to fix. doesnt create properly- outdated
-		try:
-			os.system("cp {}/template.py {}/{}.py".format(self.pluginDir, self.pluginDir, arg))
-			self.handler.Print('s', "Plugin created.\n")
-		except:
-			self.handler.Print('f', "Could not create plugin.\n")
+		if not arg or not re.match(r'^[A-Za-z0-9_]+$', arg):
+			self.handler.Print('f', "Only use alphanumeric characters or underscores.\n")
+		else:
+			try:
+				dst = Path(self.pluginDir) / arg
+				shutil.copytree(Path(self.templateDir) / "plugin_template", dst)
+				self.handler.Print('s', f"Successfully created {arg}")
+			except:
+				self.handler.Print('c', f"Could not create {arg}")
 
 	def removePlugin(self, arg):
 		'''

@@ -32,6 +32,7 @@ SOFTWARE.
 import os
 import code
 from resources.env import *
+from time import sleep
 ###
 
 ### Directory Setup
@@ -58,6 +59,7 @@ addToolDirs(TOOL_DIR)
 ### Local Imports
 import exception
 from ilcmd import *
+from update import *
 from iohandler import *
 from pluginManager import *
 ###
@@ -84,6 +86,8 @@ def main(il):
 			break
 @exception.ExceptionWrapped
 def run(config, ildir):
+	checkUpdate()
+	sleep(3)
 	global il
 	il = IntentLimit(config, ildir, PLUGIN_DIR, TOOL_DIR)
 	loadAll(il)

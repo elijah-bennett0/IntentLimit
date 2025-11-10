@@ -34,6 +34,7 @@ def checkUpdate(il):
 				zf.extractall(tmp_path)
 
 			entries = list(tmp_path.iterdir())
+			extracted_path = tmp_path
 			if len(entries) == 1 and entries[0].is_dir():
 				extracted_path = entries[0]
 

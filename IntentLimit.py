@@ -32,7 +32,6 @@ SOFTWARE.
 import os
 import code
 from resources.env import *
-from time import sleep
 ###
 
 ### Directory Setup
@@ -86,10 +85,9 @@ def main(il):
 			break
 @exception.ExceptionWrapped
 def run(config, ildir):
-	checkUpdate()
-	sleep(3)
 	global il
 	il = IntentLimit(config, ildir, PLUGIN_DIR, TOOL_DIR)
+	checkUpdate(il)
 	loadAll(il)
 	main(il)
 ###

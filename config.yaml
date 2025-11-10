@@ -58,4 +58,4 @@ otherdependencies:
 description: "A toolbox able to launch ctrlaltech tools quick and easy."
 name: IntentLimit
 type: IntentLimit
-version: 2023.0.1
+version: 2025.0.1

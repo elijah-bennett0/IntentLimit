@@ -11,7 +11,7 @@ if [ ! -d "$VENV_DIR" ]; then
 
 	echo "[*] Installing dependencies..."
 	pip install --upgrade pip
-	pip install -r requirements.txt
+	pip install -r deps.txt
 else
 	source "$VENV_DIR/bin/activate"
 fi

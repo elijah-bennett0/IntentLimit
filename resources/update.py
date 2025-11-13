@@ -24,7 +24,7 @@ def checkUpdate(il):
 
 	if REMOTE_VER > LOCAL_VER:
 		il.io.Print('w', "Update found. CTRL+C to cancel...")
-		r2 = requests.get(ZIP_URL)
+		r2 = requests.get(ZIP_URL, timeout=30)
 		r2.raise_for_status()
 		zip_bytes = r2.content
 

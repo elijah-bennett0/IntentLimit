@@ -11,3 +11,4 @@
 10. Create cyclic gen plugin
 11. Create cleanhands plugin (probably in Perl)
 12. Create frame_mkr.py script
+13. Bug: when setting multiple params in plugin context, only one shows after typing options

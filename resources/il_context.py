@@ -165,8 +165,7 @@ class PluginCtx(CmdCtx):
 		if not hasattr(self, 'params'):
 			self.params = self.getParams([None, None])
 		for k,v in self.params.items():
-			print('\n\t')
-			self.io.Print('i', "{}\t{}\n".format(k,v))
+			self.io.Print('i', f"{k:<15}{v:>5}")
 
 	"""
 	Run Command

@@ -6,7 +6,7 @@ VENV_DIR="venv"
 if [ ! -d "$VENV_DIR" ]; then
 
 	echo "[*] Installing system packages..."
-	sudo apt install python3.11-venv
+	sudo apt update && apt install python3.11-venv
 
 	echo "[*] Creating virtual environment..."
 	python3 -m venv "$VENV_DIR"

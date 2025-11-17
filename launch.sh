@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 set -e
-
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 VENV_DIR="venv"
 
 if [ ! -d "$VENV_DIR" ]; then
@@ -15,13 +15,22 @@ if [ ! -d "$VENV_DIR" ]; then
 	echo "[*] Installing dependencies..."
 	pip install --upgrade pip
 	pip install -r deps.txt
-else
-	source "$VENV_DIR/bin/activate"
 fi
 
-shopt -s expand_aliases
-alias intentlimit='exec python3 IntentLimit.py "$@"'
+BASHRC="$HOME/.bashrc"
+[ -f "$BASHRC" ] || touch "$BASHRC"
 
+if ! grep -q "alias intentlimit=" "$BASHRC"; then
+	echo "[*] Adding IntentLimit alias to $BASHRC..."
+	{
+		echo ""
+		echo "# IntentLimit Alias"
+		echo "alias intentlimit='( source \"$SCRIPT_DIR/venv/bin/activate\" && python3 \"$SCRIPT_DIR/IntentLimit.py\" )'"
+	} >> "$BASHRC"
+else
+	echo "[*] IntentLimit alias found..."
+fi
 
-read -p "[+] IntentLimit installed. Run with command `intentlimit`. Press enter to continue..."
-intentlimit
+echo "[*] Alias created. Run source ~/.bashrc to load it."
+read -p "[+] IntentLimit installed. Press enter to continue..."
+exec python3 IntentLimit.py "$@"

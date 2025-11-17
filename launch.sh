@@ -6,7 +6,7 @@ VENV_DIR="venv"
 if [ ! -d "$VENV_DIR" ]; then
 
 	echo "[*] Installing system packages..."
-	sudo apt update && apt install python3-venv
+	sudo apt update && sudo apt install python3-venv
 
 	echo "[*] Creating virtual environment..."
 	python3 -m venv "$VENV_DIR"
@@ -19,4 +19,9 @@ else
 	source "$VENV_DIR/bin/activate"
 fi
 
-exec python3 IntentLimit.py "$@"
+shopt -s expand_aliases
+alias intentlimit='exec python3 IntentLimit.py "$@"'
+
+
+read -p "[+] IntentLimit installed. Run with command `intentlimit`. Press enter to continue..."
+intentlimit

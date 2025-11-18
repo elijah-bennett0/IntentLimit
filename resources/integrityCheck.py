@@ -28,6 +28,8 @@ Version: 2.0
 '''
 ### Imports
 import os
+import sys
+import subprocess
 from iohandler import *
 ###
 
@@ -58,7 +60,15 @@ def checkAndLoad(config, iohandler, PATH):
 		try:
 			__import__(dep)
 		except:
-			iohandler.Print('f', "Dependency missing:", dep)
+			iohandler.Print('f', "Dependency missing: ", dep)
+			try:
+				iohandler.Print('w', f"\nAttempting to install {dep}...")
+				subprocess.check_call([sys.executable, '-m', 'pip', 'install', dep])
+				iohandler.Print('s', f"\n{dep} installed!")
+			except:
+				iohandler.Print('f', f"\nCould not install {dep}!")
+				sys.exit(1)
+
 	for _type, _list in dirs.items():
 		if type(_list) == dict:
 			for name, files in _list.items():

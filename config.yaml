@@ -51,6 +51,8 @@ default_dirs:
 dependencies:
  - yaml
  - pwnlib
+ - colorama
+ - angr
 
 otherdependencies:
  - cpan XML::LibXML

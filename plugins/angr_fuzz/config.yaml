@@ -6,3 +6,4 @@ params:
  - solve   # address of solve condition (use ghidra or other 3rd party tools)
  - avoid   # address of fail condition
  - base    # address where code starts
+ - flagsize # estimate size of flag

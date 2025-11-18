@@ -98,7 +98,7 @@ class ILCMD(cmd.Cmd):
 			self.ctx = self.defaultContext
 			self.__class__ = type('ILCMD',(ILCMD,),{}) #bug fix. needed to reset the __class__ from the previous context
 		else:
-			if newCtx[1] == 'Plugin':
+			if newCtx[1].lower() == 'plugin':
 				if Class:
 					c = CmdCtx(newCtx[0], newCtx[1])
 					self.__class__ = type('PluginCtx',(ILCMD, PluginCtx),{})

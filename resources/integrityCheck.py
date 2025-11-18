@@ -60,13 +60,13 @@ def checkAndLoad(config, iohandler, PATH):
 		try:
 			__import__(dep)
 		except:
-			iohandler.Print('f', "Dependency missing: ", dep)
+			iohandler.Print('f', f"Dependency missing: {dep}\n")
 			try:
-				iohandler.Print('w', f"\nAttempting to install {dep}...")
+				iohandler.Print('w', f"Attempting to install {dep}...\n")
 				subprocess.check_call([sys.executable, '-m', 'pip', 'install', dep])
-				iohandler.Print('s', f"\n{dep} installed!")
+				iohandler.Print('s', f"{dep} installed!\n")
 			except:
-				iohandler.Print('f', f"\nCould not install {dep}!")
+				iohandler.Print('f', f"Could not install {dep}!\n")
 				sys.exit(1)
 
 	for _type, _list in dirs.items():

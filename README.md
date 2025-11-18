@@ -3,5 +3,15 @@ different tools, exploits, scripts, etc I need for pentesting. This project is n
 even close to being finished but it's making progress. Also, this takes inspiration from the FuzzBunch
 framework released in the shadowbroker leak.
 
-Ps. Don't mind how shitty the code is, this is basically a beta and I don't do much
-oop so it's a big learning experience.
+run launch.sh for setup. only run for first time setup, after first run, use alias intentlimit
+to run.
+
+ex:
+
+git clone https://github.com/elijah-bennett0/IntentLimit
+
+cd IntentLimit
+
+./launch.sh <-- setup & install
+
+intentlimit <-- run intentlimit

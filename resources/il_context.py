@@ -146,10 +146,15 @@ class PluginCtx(CmdCtx):
 	def do_set(self, argStr):
 		"""Set a parameter within the selected plugin"""
 		args = argStr.split(' ')
+		# args[0] = parameter name
+		# args[1] = parameter value
 		if len(args) < 2:
 			self.io.Print('f', "Not enough arguments!")
 		else:
-			self.params = self.getParams(args)
+			if args[0] in self.params:
+				self.params[args[0]] = args[1]
+			else:
+				self.params = self.getParams(args)
 		#print(self.ctx.getActive()) #<<<< WORKS
 		# now just need to get method to read required params from
 		# config file and set up error handling.

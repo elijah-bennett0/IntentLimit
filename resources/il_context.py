@@ -30,10 +30,12 @@ SOFTWARE.
 
 ### Importsa
 #from command import ILCMD : cant do due to circular import
-import cmd
 import os
-from integrityCheck import *
+import cmd
+import importlib
 import subprocess as sp
+from pathlib import Path
+from integrityCheck import *
 ###
 
 __all__ = ["CmdCtx", "ToolCtx", "PluginCtx"]
@@ -90,6 +92,24 @@ class CmdCtx(cmd.Cmd):
 	def getPlugins(self):
 		return self.plugin
 
+	def loadTool(self, config, ILCMD): # returns a dynamic class for the loaded tool
+		cfg = readConfig(config)
+
+		commands = cfg["commands"]
+		path = Path(os.path.dirname(os.path.abspath(config)) + "/coldheart.py") # path to main tool py file
+		rel = path.with_suffix("").relative_to(self.baseDir)
+		module = ".".join(rel.parts)
+		handler = importlib.import_module(module) # uses dotted names not paths
+
+		attrs = {}
+		for cmd in commands:
+			func = getattr(handler, cmd)
+			attrs[f"do_{cmd}"] = func # {"do_test":<func test>}
+
+		ToolClass = type(f"ToolCtx_{cfg['name']}", (CmdCtx, ILCMD), attrs)
+
+		return ToolClass
+
 	def TEST(self):
 		pass
 
@@ -105,8 +125,9 @@ class ToolCtx(CmdCtx):
 		Return to the previous context
 	"""
 
-	#def do_test(self, arg):
-	#	print("TOOL CONTEXT SUCCESS")
+	def __init__(self, *args, **kwargs):
+		super().__init__(args[0], args[1])
+
 
 class PluginCtx(CmdCtx):
 	"""

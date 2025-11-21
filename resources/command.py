@@ -93,23 +93,23 @@ class ILCMD(cmd.Cmd):
 			prompt = self.promptpre + context + PROMPT_POST
 		self.prompt = prompt
 
-	def setContext(self, newCtx, Class):
+	def setContext(self, newCtx, config):
 		if newCtx is None:
 			self.ctx = self.defaultContext
 			self.__class__ = type('ILCMD',(ILCMD,),{}) #bug fix. needed to reset the __class__ from the previous context
 		else:
 			if newCtx[1].lower() == 'plugin':
-				if Class:
-					c = CmdCtx(newCtx[0], newCtx[1])
-					self.__class__ = type('PluginCtx',(ILCMD, PluginCtx),{})
-					#self.__bases__ = (cmd.Cmd,ILCMD,CmdCtx)
-				else:
-					self.__class__ = type('ILCMD',(ILCMD,),{})
+				#c = CmdCtx(newCtx[0], newCtx[1])
+				self.__class__ = type('PluginCtx',(ILCMD, PluginCtx),{})
+				#self.__bases__ = (cmd.Cmd,ILCMD,CmdCtx)
+				#else:
+					#self.__class__ = type('ILCMD',(ILCMD,),{})
 				self.ctx = PluginCtx(newCtx[0], newCtx[1])
-			else:
+			else: # tool context
+				ToolClass = CmdCtx.loadTool(self, config, ILCMD)
+				self.__class__ = ToolClass # dynamic named class to allow tool-specific commands
 				self.ctx = ToolCtx(newCtx[0], newCtx[1])
-				if Class:
-					self.__class__ = type('ToolCtx',(ILCMD, ToolCtx),{})
+
 		self.setPrompt()
 
 	def getContext(self) -> "A CmdCtx instance from context.py":
@@ -195,11 +195,11 @@ class ILCMD(cmd.Cmd):
 			else:
 				pass
 			config = readConfig(os.path.join(self.plugDir,arg,"config.yaml"))
-			self.setContext((config['name'],config['type']), PluginCtx)
+			self.setContext((config['name'], config['type']), PluginCtx)
 		elif arg in loadedTools:
 			func, path = loadedTools[arg][0], loadedTools[arg][1]
 			config = readConfig(path)
-			self.setContext((config['name'],config['type']), ToolCtx)
+			self.setContext((config['name'], config['type']), path)
 			func()
 		else:
 			self.help_use()

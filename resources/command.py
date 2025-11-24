@@ -200,7 +200,7 @@ class ILCMD(cmd.Cmd):
 			func, path = loadedTools[arg][0], loadedTools[arg][1]
 			config = readConfig(path)
 			self.setContext((config['name'], config['type']), path)
-			func()
+			#func()
 		else:
 			self.help_use()
 

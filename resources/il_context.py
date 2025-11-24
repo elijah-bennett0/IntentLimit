@@ -48,6 +48,7 @@ class CmdCtx(cmd.Cmd):
 	def __init__(self, name, type):
 		self.setName(name)
 		self.setType(type)
+		self.options = {}
 
 	def getName(self):
 		return self.name
@@ -95,18 +96,19 @@ class CmdCtx(cmd.Cmd):
 	def loadTool(self, config, ILCMD): # returns a dynamic class for the loaded tool
 		cfg = readConfig(config)
 
-		commands = cfg["commands"]
+		command_specs = cfg["commands"]
 		path = Path(os.path.dirname(os.path.abspath(config)) + "/coldheart.py") # path to main tool py file
 		rel = path.with_suffix("").relative_to(self.baseDir)
 		module = ".".join(rel.parts)
 		handler = importlib.import_module(module) # uses dotted names not paths
 
 		attrs = {}
-		for cmd in commands:
-			func = getattr(handler, cmd)
-			attrs[f"do_{cmd}"] = func # {"do_test":<func test>}
+		for cmd_name, cmd_info in command_specs.items():
+			func = getattr(handler, cmd_name)
+			attrs[f"do_{cmd_name}"] = func # {"do_test":<func test>}
 
-		ToolClass = type(f"ToolCtx_{cfg['name']}", (CmdCtx, ILCMD), attrs)
+		attrs["CMD_SPECS"] = command_specs
+		ToolClass = type(f"ToolCtx_{cfg['name']}", (ToolCtx, ILCMD), attrs)
 
 		return ToolClass
 
@@ -128,6 +130,17 @@ class ToolCtx(CmdCtx):
 	def __init__(self, *args, **kwargs):
 		super().__init__(args[0], args[1])
 
+	def do_set(self, arg):
+		name, value = arg.split(' ') # could make more robust later
+		self.options[name] = value
+
+	def do_options(self, arg):
+		if arg.strip() == "options":
+			self.showOptions()
+
+	def showOptions(self):
+		specs = getattr(self.__class__, "CMD_SPECS", {})
+		print(specs)
 
 class PluginCtx(CmdCtx):
 	"""

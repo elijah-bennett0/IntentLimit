@@ -93,7 +93,8 @@ class Manager():
 					if os.path.splitext(tool)[1] == '.py':
 						try:
 							name, t = os.path.splitext(tool)
-							module = getattr(__import__(name, fromlist=[name]), name)
+							#module = getattr(__import__(name, fromlist=[name]), name)
+							module = "temp" # need to tweak logic to support currnet loadTool method in context
 							configPath = os.path.join(self.toolDir, category, toolName, "config.yaml")
 							loadedTools[name] = [module, configPath]
 						except Exception as e:

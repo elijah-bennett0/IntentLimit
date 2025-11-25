@@ -108,7 +108,8 @@ class ILCMD(cmd.Cmd):
 			else: # tool context
 				ToolClass = CmdCtx.loadTool(self, config, ILCMD)
 				self.__class__ = ToolClass # dynamic named class to allow tool-specific commands
-				self.ctx = ToolCtx(newCtx[0], newCtx[1])
+				self.ctx = ToolClass(newCtx[0], newCtx[1])
+				#ToolClass.__init__(newCtx[0], newCtx[1])
 
 		self.setPrompt()
 
@@ -380,17 +381,18 @@ class ILCMD(cmd.Cmd):
 		cmd, arg, line = self.parseLine(line)
 		if not line:
 			return self.emptyline()
-		if cmd is None:
+		if cmd is None or cmd == '':
 			return self.default(line)
-		if cmd == '':
-			return self.default(line)
-		else:
+		try:
+			func = self.ctx.lookupCmd(cmd)
+			return func(arg)
+		except AttributeError:
 			try:
 				func = getattr(self, "do_" + cmd.lower())
 			except AttributeError:
 				return self.default(line)
-
 			return func(arg)
+
 
 	def emptyline(self):
 		pass

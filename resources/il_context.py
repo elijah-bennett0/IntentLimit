@@ -127,12 +127,13 @@ class ToolCtx(CmdCtx):
 		Return to the previous context
 	"""
 
-	def __init__(self, *args, **kwargs):
+	def __init__(self, *args):
 		super().__init__(args[0], args[1])
 
 	def do_set(self, arg):
 		name, value = arg.split(' ') # could make more robust later
 		self.options[name] = value
+		print(self.options)
 
 	def do_options(self, arg):
 		if arg.strip() == "options":

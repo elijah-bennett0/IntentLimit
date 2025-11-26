@@ -135,13 +135,30 @@ class ToolCtx(CmdCtx):
 		self.options[name] = value
 		print(self.options)
 
-	def do_options(self, arg):
-		if arg.strip() == "options":
-			self.showOptions()
+	def help_options(self):
+		print("TEST")
 
-	def showOptions(self):
+	def do_options(self, arg):
 		specs = getattr(self.__class__, "CMD_SPECS", {})
-		print(specs)
+		if not specs:
+			self.handler.Print('w', "No options for this context!")
+		for cmd_name, cmd_spec in specs.items():
+			print(f"\nCommand: {cmd_name}")
+			params = cmd_spec.get("params", {})
+			if not params:
+				continue
+
+			for param_name, info in params.items():
+				ptype = info.get("type", "str")
+				required = "required" if info.get("required") else "optional"
+				desc = info.get("desc", "")
+
+				# main line for the param
+				print(f"  Param: {param_name} ({ptype}, {required})")
+				# optional description on its own indented line
+				if desc:
+					print(f"    Desc: {desc}\n")
+
 
 class PluginCtx(CmdCtx):
 	"""

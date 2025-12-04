@@ -131,6 +131,7 @@ class ToolCtx(CmdCtx):
 		super().__init__(args[0], args[1])
 
 	def do_set(self, arg):
+		"""Set a specified parameter."""
 		name, value = arg.split(' ') # could make more robust later
 		self.options[name] = value
 		print(self.options)
@@ -139,6 +140,7 @@ class ToolCtx(CmdCtx):
 		print("TEST")
 
 	def do_options(self, arg):
+		"""Show context specific commands and params."""
 		specs = getattr(self.__class__, "CMD_SPECS", {})
 		if not specs:
 			self.handler.Print('w', "No options for this context!")

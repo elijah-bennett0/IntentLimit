@@ -7,6 +7,7 @@ if [ ! -d "$VENV_DIR" ]; then
 
 	echo "[*] Installing system packages..."
 	sudo apt update && sudo apt install python3-venv
+	dpkg --add-architecture i386 && apt-get install wine32:i386
 
 	echo "[*] Creating virtual environment..."
 	python3 -m venv "$VENV_DIR"

@@ -134,7 +134,7 @@ class ToolCtx(CmdCtx):
 		"""Set a specified parameter."""
 		name, value = arg.split(' ') # could make more robust later
 		self.options[name] = value
-		print(self.options)
+		#print(self.options)
 
 	def help_options(self):
 		print("TEST")

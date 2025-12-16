@@ -154,12 +154,15 @@ class ToolCtx(CmdCtx):
 				ptype = info.get("type", "str")
 				required = "required" if info.get("required") else "optional"
 				desc = info.get("desc", "")
+				opts = info.get("opts") if info.get("opts") else None
 
 				# main line for the param
 				print(f"  Param: {param_name} ({ptype}, {required})")
 				# optional description on its own indented line
 				if desc:
 					print(f"    Desc: {desc}\n")
+				if opts:
+					print(f"    Options: {opts}\n")
 
 
 class PluginCtx(CmdCtx):

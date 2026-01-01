@@ -12,3 +12,34 @@
 11. Create cleanhands plugin (probably in Perl)
 12. Create frame_mkr.py script
 13. Bug: when setting multiple params in plugin context, only one shows after typing options
+
+Coldheart:
+	should have windows specific techniques:
+		windows smb exploits:
+			eternalblue:
+			eternalromance:
+			eternalsynergy:
+			eternalchampion:
+			educatedscholar:
+		windows rdp/iis/system exploits:
+			esteemaudit:
+			explodingcan:
+			emeraldthread:
+		windows local privesc:
+			epme:
+			eclipsedwing:
+			erraticgopher:
+
+GoldenBullet:
+	more generalized exploits:
+		cisco/network exploits:
+			extrabacon:
+			epicbanana:
+			jetplow:
+			benigncertain:
+			bananaglee:
+			bananaballot:
+
+CrazyIngrate:
+	linux/unix exploits:
+		nothing yet.

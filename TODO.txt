@@ -12,6 +12,12 @@
 11. Create cleanhands plugin (probably in Perl)
 12. Create frame_mkr.py script
 13. Bug: when setting multiple params in plugin context, only one shows after typing options
+14.   File "/root/IntentLimit/resources/il_context.py", line 108, in loadTool
+    for cmd_name, cmd_info in command_specs.items():
+                              ^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'items'
+
+^^ ADD CHECK FOR NO COMMANDS IN CONFIG
 
 Coldheart:
 	should have windows specific techniques:

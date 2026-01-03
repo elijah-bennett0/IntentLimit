@@ -97,7 +97,9 @@ class CmdCtx(cmd.Cmd):
 		cfg = readConfig(config)
 
 		command_specs = cfg["commands"]
-		path = Path(os.path.dirname(os.path.abspath(config)) + "/coldheart.py") # path to main tool py file
+		tool_dir = Path(os.path.dirname(os.path.abspath(config)))
+		tool_name = tool_dir.name.lower()
+		path = tool_dir / f"{tool_name}.py"
 		rel = path.with_suffix("").relative_to(self.baseDir)
 		module = ".".join(rel.parts)
 		handler = importlib.import_module(module) # uses dotted names not paths

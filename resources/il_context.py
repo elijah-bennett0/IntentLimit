@@ -105,11 +105,15 @@ class CmdCtx(cmd.Cmd):
 		handler = importlib.import_module(module) # uses dotted names not paths
 
 		attrs = {}
-		for cmd_name, cmd_info in command_specs.items():
-			func = getattr(handler, cmd_name)
-			attrs[f"do_{cmd_name}"] = func # {"do_test":<func test>}
+		try:
+			for cmd_name, cmd_info in command_specs.items():
+				func = getattr(handler, cmd_name)
+				attrs[f"do_{cmd_name}"] = func # {"do_test":<func test>}
 
-		attrs["CMD_SPECS"] = command_specs
+			attrs["CMD_SPECS"] = command_specs
+		except:
+			self.io.Print('f', "No commands found for tool.")
+
 		ToolClass = type(f"ToolCtx_{cfg['name']}", (ToolCtx, ILCMD), attrs)
 
 		return ToolClass

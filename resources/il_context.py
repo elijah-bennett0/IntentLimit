@@ -149,7 +149,7 @@ class ToolCtx(CmdCtx):
 		"""Show context specific commands and params."""
 		specs = getattr(self.__class__, "CMD_SPECS", {})
 		if not specs:
-			self.handler.Print('w', "No options for this context!")
+			self.io.Print('w', "No options for this context!")
 		for cmd_name, cmd_spec in specs.items():
 			print(f"\nCommand: {cmd_name}")
 			params = cmd_spec.get("params", {})

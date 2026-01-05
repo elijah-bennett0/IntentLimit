@@ -1,17 +1,14 @@
 
 	TODO, Not in any kind of order:
 
-1. Fix bug in loadNew() line 111 in pluginManager.py, doesn't support files other than .py
+1. Fix bug in loadNew() line 111 in pluginManager.py, doesn't support files other than .py <- slightly fixed lol
 2. Finish the plugin loading methods for non-python scripts in pluginManager.py
 3. Maybe optimize the Print() method in iohandler.py
-4. Create the update.py script to check for updates from github
-6. Create a couple more plugins
-7. Eventually add Windows support
-9. Implement logger algorithm
+4. Create the update.py script to check for updates from github <- improve
+9. Implement logger algorithm <- low priority
 10. Create cyclic gen plugin
 11. Create cleanhands plugin (probably in Perl)
-12. Create frame_mkr.py script
-13. Bug: when setting multiple params in plugin context, only one shows after typing options
+12. Create frame_mkr.py script <- to streamline new tool creation
 
 Coldheart:
 	should have windows specific techniques:

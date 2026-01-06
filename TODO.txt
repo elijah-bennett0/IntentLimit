@@ -9,6 +9,7 @@
 10. Create cyclic gen plugin
 11. Create cleanhands plugin (probably in Perl)
 12. Create frame_mkr.py script <- to streamline new tool creation
+13. Need a way to better describe and or search exploits. these names arent explanatory.
 
 Coldheart:
 	should have windows specific techniques:

@@ -356,7 +356,7 @@ class ILCMD(cmd.Cmd):
 			self.io.Print('i', "{} version {} : {}".format(config['name'], config['version'], config['description']))
 		elif name in loadedPlugins:
 			self.io.Print('f', "Info doesn't support plugins yet.")
-		elif name not in loadedPlugins and name not in loadedTools and name != '':
+		elif name not in loadedPlugins and name not in loadedTools and name != '' and name != 'list': # probably should clean this up
 			found_any = False
 
 			for tool_key, (func, cfg_path) in loadedTools.items():
@@ -395,6 +395,10 @@ class ILCMD(cmd.Cmd):
 								self.io.Print('i', f"'{name}' is an option for {cfg.get('name', tool_key)}.{cmd} param '{param}' (no touch config at {subcfg_path})")
 			if not found_any:
 				self.io.Print('f', f"Couldn't find info about {name}")
+		elif name == "list":
+			for tool in loadedTools.keys():
+				config = readConfig(loadedTools[tool][1])
+				self.io.Print('i', "{} version {} : {}".format(config['name'], config['version'], config['description']))
 		else:
 			self.help_info()
 

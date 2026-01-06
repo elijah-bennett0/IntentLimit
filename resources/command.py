@@ -355,44 +355,48 @@ class ILCMD(cmd.Cmd):
 			config = readConfig(path)
 			self.io.Print('i', "{} version {} : {}".format(config['name'], config['version'], config['description']))
 		elif name in loadedPlugins:
-			self.io.Print('f', "Info doesn't support plugins yet.")
+			path = loadedPlugins[name][1]
+			config = readConfig(path)
+			self.io.Print('i', "{} version {} : {}".format(config['name'], config['version'], config['description']))
 		elif name not in loadedPlugins and name not in loadedTools and name != '' and name != 'list': # probably should clean this up
 			found_any = False
 
-			for tool_key, (func, cfg_path) in loadedTools.items():
-				cfg = readConfig(cfg_path)
-				for cmd, cmdspec in cfg.get("commands", {}).items():
-					for param, pspec in cmdspec.get("params", {}).items():
-						opts = pspec.get("opts")
-						if not opts:
-							continue
+			try:
+				for tool_key, (func, cfg_path) in loadedTools.items():
+					cfg = readConfig(cfg_path)
+					for cmd, cmdspec in cfg.get("commands", {}).items():
+						for param, pspec in cmdspec.get("params", {}).items():
+							opts = pspec.get("opts")
+							if not opts:
+								continue
+							if isinstance(opts, str):
+								opt_list = [o.strip() for o in opts.split(",") if o.strip()]
+							elif isinstance(opts, (list, tuple, set)):
+								opt_list = [str(o).strip() for o in opts if str(o).strip()]
+							else:
+								continue
 
-						if isinstance(opts, str):
-							opt_list = [o.strip() for o in opts.split(",") if o.strip()]
-						elif isinstance(opts, (list, tuple, set)):
-							opt_list = [str(o).strip() for o in opts if str(o).strip()]
-						else:
-							continue
+							if name in opt_list:
+								found_any = True
 
-						if name in opt_list:
-							found_any = True
+								# Try to load touch config next to the tool config
+								subcfg_path = os.path.join(os.path.dirname(cfg_path), "touches", name, "config.yaml")
 
-							# Try to load touch config next to the tool config
-							subcfg_path = os.path.join(os.path.dirname(cfg_path), "touches", name, "config.yaml")
-
-							try:
-								touch_cfg = readConfig(subcfg_path)
-								self.io.Print(
-									'i',
-									"{} version {} : {}".format(
-									touch_cfg.get("name", name),
-									touch_cfg.get("version", "?"),
-									touch_cfg.get("description", "(no description)"),
+								try:
+									touch_cfg = readConfig(subcfg_path)
+									self.io.Print(
+										'i',
+										"{} version {} : {}".format(
+										touch_cfg.get("name", name),
+										touch_cfg.get("version", "?"),
+										touch_cfg.get("description", "(no description)"),
+										)
 									)
-								)
-							except Exception:
-								# fallback: at least explain where it was found
-								self.io.Print('i', f"'{name}' is an option for {cfg.get('name', tool_key)}.{cmd} param '{param}' (no touch config at {subcfg_path})")
+								except Exception:
+									# fallback: at least explain where it was found
+									self.io.Print('i', f"'{name}' is an option for {cfg.get('name', tool_key)}.{cmd} param '{param}' (no touch config at {subcfg_path})")
+			except: # eh
+				pass
 			if not found_any:
 				self.io.Print('f', f"Couldn't find info about {name}")
 		elif name == "list":

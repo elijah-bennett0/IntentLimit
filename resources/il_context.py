@@ -32,6 +32,7 @@ SOFTWARE.
 #from command import ILCMD : cant do due to circular import
 import os
 import cmd
+import types
 import importlib
 import subprocess as sp
 from pathlib import Path
@@ -245,18 +246,22 @@ class PluginCtx(CmdCtx):
 
 	def do_run(self, arg):
 		"""Run the selected plugin"""
-		plugin = self.loadedPlugins[self.ctx.getName()]
-		if 'perl ' not in plugin[1] and 'bash ' not in plugin[1]:
+		plugin = self.loadedPlugins[self.ctx.getName().lower()]
+		if type(plugin[0]) == types.FunctionType:
 			func = plugin[0]
-			func(self.io, self.params)
+			if hasattr(self, 'params'):
+				func(self.io, self.params)
+			else:
+				func(self.io)
 		else:
 			# needa fix this garbage. temp workaround
-			if plugin[1] == 'perl ':
+			print(plugin[0])
+			if plugin[0] == 'perl ':
 				ext = '.pl'
-				cmd = plugin[1] + ' ' + plugin[0] + ext
+				cmd = plugin[0] + ' ' + self.ctx.getName().lower() + ext
 			elif plugin[1] == 'bash ':
 				ext = '.sh'
-				cmd = plugin[1] + plugin[0] + ext
+				cmd = plugin[0] + ' ' + self.ctx.getName().lower() + ext
 			p = sp.getoutput(cmd) # replace with subprocess?
 			print(p)
 	#def do_test(self, arg):

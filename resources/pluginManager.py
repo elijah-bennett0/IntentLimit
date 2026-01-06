@@ -76,7 +76,7 @@ class Manager():
 								loadedPlugins[name] = [module, configPath]
 							else:
 								configPath = os.path.join(self.pluginDir, dir, "config.yaml")
-								loadedPlugins[name] = [os.path.join(self.pluginDir, dir, name), self.supported[t]] # {'test':'perl '} shitty but should work for now
+								loadedPlugins[name] = [self.supported[t], configPath] # {'perl ': '/test/test/config'} shitty but should work for now
 						except Exception as e:
 							self.handler.Print('f', "Could Not Load: %s" % name)
 							self.handler.Print('c', str(e))

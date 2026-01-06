@@ -1,3 +1,5 @@
 description: "Generic Small Tools For Quick Tasks"
 name: Pack_Cap
 type: Plugin
+version: 1.0
+params:

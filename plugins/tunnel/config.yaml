@@ -1,3 +1,5 @@
 description: "Generic Small Tools For Quick Tasks"
 name: Tunnel
 type: Plugin
+version: 1.0
+params:

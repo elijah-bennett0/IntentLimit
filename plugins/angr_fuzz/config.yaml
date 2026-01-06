@@ -1,6 +1,7 @@
 name: angr_fuzz
 description: A very simple implementation of the angr framework for small reversing problems
 type: Plugin
+version: 1.0
 params:
  - binpath # path to binary
  - solve   # address of solve condition (use ghidra or other 3rd party tools)

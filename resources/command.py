@@ -399,6 +399,9 @@ class ILCMD(cmd.Cmd):
 			for tool in loadedTools.keys():
 				config = readConfig(loadedTools[tool][1])
 				self.io.Print('i', "{} version {} : {}".format(config['name'], config['version'], config['description']))
+			for plugin in loadedPlugins.keys():
+				config = readConfig(loadedPlugins[plugin][1])
+				self.io.Print('i', "{} version {} : {}".format(config['name'], config['version'], config['description']))
 		else:
 			self.help_info()
 

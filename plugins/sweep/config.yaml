@@ -1,3 +1,5 @@
 description: "Generic Small Tools For Quick Tasks"
 name: Sweep
 type: Plugin
+version: 1.0
+params:

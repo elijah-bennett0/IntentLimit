@@ -10,6 +10,7 @@
 11. Create cleanhands plugin (probably in Perl)
 12. Create frame_mkr.py script <- to streamline new tool creation
 13. Need a way to better describe and or search exploits. these names arent explanatory.
+	-> info list command added but need to clean it up and categorize the output
 
 Coldheart:
 	should have windows specific techniques:

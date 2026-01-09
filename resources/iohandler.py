@@ -69,7 +69,8 @@ class IOhandler():
                 "w":{"[!]":'',"attr":None},
                 "i":{"[*]":'',"attr":None},
                 "c":{"[CRITICAL]":'',"attr":self.highlight},
-                "q":{"[?]":'',"attr":None}}
+                "q":{"[?]":'',"attr":None},
+		"n":{'':'',"attr":None}}
 
 		self.colormap = {
 		"f":{"[-]":self.red,"attr":None},
@@ -77,7 +78,9 @@ class IOhandler():
 		"w":{"[!]":self.yellow,"attr":None},
 		"i":{"[*]":self.blue,"attr":None},
 		"c":{"[CRITICAL]":self.red,"attr":self.highlight},
-		"q":{"[?]":self.magenta,"attr":None}}
+		"q":{"[?]":self.magenta,"attr":None},
+		"n":{'':'',"attr":None}}
+
 
 	def truncate(self, string: str, length: int) -> str:
 		return string if (len(string) <= length) else ("%s... (plus %d characters)" % (string[:length], len(string) - length))
@@ -104,18 +107,20 @@ class IOhandler():
 			end = '\n'
 		else:
 			end = args[0]
-
-		if attr:
-			colored += col + attr + pat + self.reset
+		if type == 'n':
+			self.write(text)
 		else:
-			for char in pat:
-				if pat.find(char) == 1:
-					colored += col + char + self.reset
-				else:
-					colored += char
+			if attr:
+				colored += col + attr + pat + self.reset
+			else:
+				for char in pat:
+					if pat.find(char) == 1:
+						colored += col + char + self.reset
+					else:
+						colored += char
 
-		line = colored + " " + text + end # Bug i think. *args might do weird shit
-		self.write(line)
+			line = colored + " " + text + end # Bug i think. *args might do weird shit
+			self.write(line)
 
 	def get_input(self, text):
 		self.Print('q', text, '')

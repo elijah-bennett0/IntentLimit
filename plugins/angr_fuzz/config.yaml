@@ -1,5 +1,5 @@
 name: angr_fuzz
-description: A very simple implementation of the angr framework for small reversing problems
+description: Small angr script for reversing
 type: Plugin
 version: 1.0
 params:

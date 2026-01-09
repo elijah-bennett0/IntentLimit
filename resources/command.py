@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+#-*- coding: utf-8 -*-
 """
 MIT License
 
@@ -400,12 +400,17 @@ class ILCMD(cmd.Cmd):
 			if not found_any:
 				self.io.Print('f', f"Couldn't find info about {name}")
 		elif name == "list":
+			self.io.Print('n', "\n")
+			self.io.Print('i', "Tool Information")
 			for tool in loadedTools.keys():
 				config = readConfig(loadedTools[tool][1])
-				self.io.Print('i', "{} version {} : {}".format(config['name'], config['version'], config['description']))
+				self.io.Print('s', "{:25} : {:50}".format(f"{config['name']} version {config['version']}", f"{config['description']}"))
+			self.io.Print('n', "\n\n")
+			self.io.Print('i', "Plugin Information")
 			for plugin in loadedPlugins.keys():
 				config = readConfig(loadedPlugins[plugin][1])
-				self.io.Print('i', "{} version {} : {}".format(config['name'], config['version'], config['description']))
+				self.io.Print('s', "{:25} : {:60}".format(f"{config['name']} version {config['version']}", f"{config['description']}"))
+			self.io.Print('n', "\n")
 		else:
 			self.help_info()
 

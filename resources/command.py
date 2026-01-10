@@ -341,6 +341,18 @@ class ILCMD(cmd.Cmd):
 				self.io.print_cmd_list({"title":"%s Commands"%self.ctx.getType(),"commands":ctx_cmds})
 
 	"""
+	Search Command
+	"""
+	def help_search(self):
+		usage = ["search [term]",
+			"Show related matches to a specified term"]
+		self.io.print_usage(usage)
+
+	def do_search(self, term):
+		"""Show related matches to a specified term"""
+		pass
+
+	"""
 	Info Command
 	"""
 	def help_info(self):

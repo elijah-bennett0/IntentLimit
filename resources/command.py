@@ -350,6 +350,8 @@ class ILCMD(cmd.Cmd):
 
 	def do_search(self, term):
 		"""Show related matches to a specified term"""
+		# probably sort things into categories
+		# names (tools/plugins), commands, operating systems, attack path? (exploit, touch, backdoor, etc)
 		pass
 
 	"""

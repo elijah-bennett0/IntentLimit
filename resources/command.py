@@ -352,8 +352,8 @@ class ILCMD(cmd.Cmd):
 		"""Show related matches to a specified term"""
 		# probably sort things into categories
 		# names (tools/plugins), commands, operating systems, attack path? (exploit, touch, backdoor, etc)
-		pass
-
+		categories = {"names":["coldheart", "goldenbullet"], "commands":["info", "help"], "paths":["exploit", "scan"]}
+		# maybe set it up like this? or use some sort of external cache so we dont have a huge array here?
 	"""
 	Info Command
 	"""

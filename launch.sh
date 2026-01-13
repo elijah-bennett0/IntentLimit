@@ -33,5 +33,5 @@ else
 fi
 
 echo "[*] Alias created. Run source ~/.bashrc to load it."
-read -p "[+] IntentLimit installed. Press enter to continue..."
-exec python3 IntentLimit.py "$@"
+echo "[+] IntentLimit installed. Run with command: intentlimit"
+

@@ -11,6 +11,8 @@
 12. Create frame_mkr.py script <- to streamline new tool creation
 13. Need a way to better describe and or search exploits. these names arent explanatory.
 	-> info list command added but need to clean it up and categorize the output
+14. Search function will use a separate index.yaml that is populated at startup and contains metadata/tags 
+	to ensure the search function is quick. Need to add tags field to each config.yaml with search terms 
 
 Coldheart:
 	should have windows specific techniques:

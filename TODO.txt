@@ -34,6 +34,7 @@ Coldheart:
 GoldenBullet:
 	more generalized exploits:
 		cisco/network exploits:
+			Rewrite in C?
 			extrabacon:
 			epicbanana:
 			jetplow:

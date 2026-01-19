@@ -1,4 +1,4 @@
-
+test
 	TODO, Not in any kind of order:
 
 1. Fix bug in loadNew() line 111 in pluginManager.py, doesn't support files other than .py <- slightly fixed lol

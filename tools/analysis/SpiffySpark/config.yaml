@@ -1,0 +1,5 @@
+name: SpiffySpark
+description: Analysis framework
+type: analysis
+kind: tool
+tags: ["analysis"]

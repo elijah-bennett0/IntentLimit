@@ -1,0 +1,5 @@
+name: WryDame
+description: Reporting framework
+type: Reporting
+kind: tool
+tags: ["reporting", "report"]

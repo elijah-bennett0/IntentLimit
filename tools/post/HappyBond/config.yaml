@@ -1,0 +1,5 @@
+name: HappyBond
+description: Post-exploitation framework
+type: Post
+kind: tool
+tags: ["post", "post-exploitation"]

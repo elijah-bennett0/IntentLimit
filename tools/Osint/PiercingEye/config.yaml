@@ -1,0 +1,5 @@
+name: PiercingEye
+description: Osint framework
+type: Osint
+kind: tool
+tags: ["osint"]

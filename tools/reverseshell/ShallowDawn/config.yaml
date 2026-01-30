@@ -1,0 +1,5 @@
+name: ShallowDawn
+description: Reverse shell framework
+type: Reverse shell
+kind: tool
+tags: ["reverse", "shell", "reverseshell"]

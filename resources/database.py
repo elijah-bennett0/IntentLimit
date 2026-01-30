@@ -38,7 +38,7 @@ __all__ = []
 # Name the main function the same name as the file
 ### Code:
 def createDB(TOOL_DIR, PLUGIN_DIR):
-'''
+	'''
 1. check if index.yaml exists in /resources
 2. if not, create it
 
@@ -51,9 +51,9 @@ items:
       desc: ...
       tags: [..,..,..]
       action: "use tool"
-'''
+	'''
 	yaml = YAML()
-	yaml.indent(mapping=2, sequence=1, offset=2)
+	yaml.indent(mapping=2, sequence=4, offset=2)
 
 	db = {
 
@@ -62,20 +62,25 @@ items:
 	}
 
 	tools = Path(TOOL_DIR) # probably make a combined tool/plugin dir to iterate and index both
-	for tool_dir in tools.iterdir():
-		cfg_path = tool_dir / "config.yaml"
-		cfg = readConfig(cfg_path)
-		index["items"].append({
-			"name": cfg["name"].lower(),
-			"type": cfg["kind"].lower(),
-			"desc": cfg["description"],
-			"tags": cfg["tags"],
-			"action": f"use {cfg['name'].lower()}"
-		})
+	for category in tools.iterdir():
+		for tool_dir in category.iterdir():
+			if not tool_dir.is_dir():
+				continue
+
+			cfg_path = tool_dir / "config.yaml"
+			cfg = readConfig(cfg_path)
+			db["items"].append({
+				"name": cfg["name"].lower(),
+				"kind": cfg["kind"].lower(),
+				"category": cfg["type"].lower(),
+				"desc": cfg["description"],
+				"tags": cfg["tags"],
+				"action": f"use {cfg['name'].lower()}"
+			})
 
 	db_path = tools.parent / "resources/database.yaml"
 	with open(db_path, 'w') as f:
-		yaml.dump(index, f)
+		yaml.dump(db, f)
 
 ###
 

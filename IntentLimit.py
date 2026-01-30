@@ -61,6 +61,7 @@ from ilcmd import *
 from update import *
 from iohandler import *
 from pluginManager import *
+from database import createDB
 ###
 
 ### Code

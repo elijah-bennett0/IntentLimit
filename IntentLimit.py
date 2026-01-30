@@ -89,6 +89,7 @@ def run(config, ildir):
 	il = IntentLimit(config, ildir, PLUGIN_DIR, TOOL_DIR)
 	checkUpdate(il)
 	loadAll(il)
+	createDB(TOOL_DIR, PLUGIN_DIR)
 	main(il)
 ###
 

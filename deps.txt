@@ -1,4 +1,5 @@
 pyyaml
+ruamel.yaml
 pwntools
 colorama
 angr

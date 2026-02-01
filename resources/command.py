@@ -354,6 +354,10 @@ class ILCMD(cmd.Cmd):
 		# names (tools/plugins), commands, operating systems, attack path? (exploit, touch, backdoor, etc)
 		categories = {"names":["coldheart", "goldenbullet"], "commands":["info", "help"], "paths":["exploit", "scan"]}
 		# maybe set it up like this? or use some sort of external cache so we dont have a huge array here?
+
+	def do_searchui(self, term):
+	"""Planning to use ncurses and C to show a graphical UI searching function"""
+
 	"""
 	Info Command
 	"""

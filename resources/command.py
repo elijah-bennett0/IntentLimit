@@ -354,7 +354,7 @@ class ILCMD(cmd.Cmd):
 		try:
 			cfg = readConfig(self.baseDir + "/resources/database.yaml") # {'items':[whole config here]}
 			tokens = [t for t in term.split() if t]
-			patterns = [re.compile(rf"^{re.escape(t)}$", re.IGNORECASE) for t in tokens] # list comprehension of re patterns from tokens
+			patterns = [re.compile(rf"^{re.escape(t)}", re.IGNORECASE) for t in tokens] # list comprehension of re patterns from tokens
 			results = []
 
 			items = cfg.get("items")

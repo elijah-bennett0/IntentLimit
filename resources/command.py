@@ -29,6 +29,7 @@ SOFTWARE.
 """
 
 ### Imports
+import re
 import os
 import cmd
 import string
@@ -350,13 +351,31 @@ class ILCMD(cmd.Cmd):
 
 	def do_search(self, term):
 		"""Show related matches to a specified term"""
-		# probably sort things into categories
-		# names (tools/plugins), commands, operating systems, attack path? (exploit, touch, backdoor, etc)
-		categories = {"names":["coldheart", "goldenbullet"], "commands":["info", "help"], "paths":["exploit", "scan"]}
-		# maybe set it up like this? or use some sort of external cache so we dont have a huge array here?
+		try:
+			cfg = readConfig(self.baseDir + "/resources/database.yaml") # {'items':[whole config here]}
+			tokens = [t for t in term.split() if t]
+			patterns = [re.compile(rf"^{re.escape(t)}$", re.IGNORECASE) for t in tokens] # list comprehension of re patterns from tokens
+			results = []
+
+			items = cfg.get("items")
+			for item in items:
+				name, kind, cat, tags = str(item.get("name")), str(item.get("kind")), str(item.get("category")), item.get("tags")
+				for pat in patterns:
+					if (pat.match(name) or pat.match(kind) or pat.match(cat) or any(pat.match(str(tag)) for tag in tags)):
+						results.append(item)
+						break
+			if results:
+				for result in results:
+					self.io.Print('s', f"{result['name']} [{result['kind']}] ({result['category']}) - {result['desc']}")
+			else:
+				self.io.Print('f', f"No results for {term}")
+
+		except Exception as e:
+			self.io.Print('f', "Something went wrong... report to author:", e)
 
 	def do_searchui(self, term):
-	"""Planning to use ncurses and C to show a graphical UI searching function"""
+		"""Planning to use ncurses and C to show a graphical UI searching function"""
+		pass
 
 	"""
 	Info Command

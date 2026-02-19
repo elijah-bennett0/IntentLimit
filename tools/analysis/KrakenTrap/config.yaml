@@ -1,0 +1,5 @@
+name: KrakenTrap
+description: Debugger
+type: analysis
+kind: tool
+tags: ["analysis", "debugger"]

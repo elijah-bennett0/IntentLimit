@@ -44,10 +44,18 @@ items:
     tags:
       - analysis
     action: use spiffyspark
+  - name: krakentrap
+    kind: tool
+    category: analysis
+    desc: Debugger
+    tags:
+      - analysis
+      - debugger
+    action: use krakentrap
   - name: goldenbullet
     kind: tool
     category: exploitation
-    desc: Non-Windows Exploitation Techniques
+    desc: General Exploitation Techniques
     tags:
       - general
       - exploitation

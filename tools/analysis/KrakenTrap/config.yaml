@@ -3,3 +3,10 @@ description: Debugger
 type: analysis
 kind: tool
 tags: ["analysis", "debugger"]
+
+commands:
+  debug:
+    params:
+      target:
+        type: str
+        required: true

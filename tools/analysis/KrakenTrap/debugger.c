@@ -30,7 +30,7 @@ void run_debugger(pid_t child_pid) {
 		struct user_regs_struct regs;
 		ptrace(PTRACE_GETREGS, child_pid, 0, &regs);
 		unsigned instr = ptrace(PTRACE_PEEKTEXT, child_pid, regs.rip, 0);
-		printf("ICOUNTER: %u.\tEIP: 0x%08x.\tINSTR: 0x%08x\n", icounter, regs.rip, instr);
+		printf("ICOUNTER: %u.\tEIP: 0x%11x.\tINSTR: 0x%11x\n", icounter, regs.rip, instr);
 		if (ptrace(PTRACE_SINGLESTEP, child_pid, 0, 0) < 0) {
 			perror("ptrace");
 			return;

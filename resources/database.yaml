@@ -1,4 +1,63 @@
 items:
+  - name: wrydame
+    kind: tool
+    category: reporting
+    desc: Reporting framework
+    tags:
+      - reporting
+      - report
+    action: use wrydame
+  - name: happybond
+    kind: tool
+    category: post
+    desc: Post-exploitation framework
+    tags:
+      - post
+      - post-exploitation
+    action: use happybond
+  - name: piercingeye
+    kind: tool
+    category: osint
+    desc: Osint framework
+    tags:
+      - osint
+    action: use piercingeye
+  - name: shallowdawn
+    kind: tool
+    category: reverse shell
+    desc: Reverse shell framework
+    tags:
+      - reverse
+      - shell
+      - reverseshell
+    action: use shallowdawn
+  - name: goldenbullet
+    kind: tool
+    category: exploitation
+    desc: General Exploitation Techniques
+    tags:
+      - general
+      - exploitation
+    action: use goldenbullet
+  - name: coldheart
+    kind: tool
+    category: exploitation
+    desc: Windows SMB Exploitation Techniques
+    tags:
+      - microsoft
+      - windows
+      - exploit
+      - expploitation
+      - smb
+    action: use coldheart
+  - name: crazyingrate
+    kind: tool
+    category: exploitation
+    desc: Linux exploitation framework
+    tags:
+      - linux
+      - exploitation
+    action: use crazyingrate
   - name: convenejudgement
     kind: tool
     category: recon
@@ -13,30 +72,6 @@ items:
     tags:
       - modeling
     action: use mistyrelay
-  - name: piercingeye
-    kind: tool
-    category: osint
-    desc: Osint framework
-    tags:
-      - osint
-    action: use piercingeye
-  - name: happybond
-    kind: tool
-    category: post
-    desc: Post-exploitation framework
-    tags:
-      - post
-      - post-exploitation
-    action: use happybond
-  - name: shallowdawn
-    kind: tool
-    category: reverse shell
-    desc: Reverse shell framework
-    tags:
-      - reverse
-      - shell
-      - reverseshell
-    action: use shallowdawn
   - name: spiffyspark
     kind: tool
     category: analysis
@@ -52,38 +87,3 @@ items:
       - analysis
       - debugger
     action: use krakentrap
-  - name: goldenbullet
-    kind: tool
-    category: exploitation
-    desc: General Exploitation Techniques
-    tags:
-      - general
-      - exploitation
-    action: use goldenbullet
-  - name: crazyingrate
-    kind: tool
-    category: exploitation
-    desc: Linux exploitation framework
-    tags:
-      - linux
-      - exploitation
-    action: use crazyingrate
-  - name: coldheart
-    kind: tool
-    category: exploitation
-    desc: Windows SMB Exploitation Techniques
-    tags:
-      - microsoft
-      - windows
-      - exploit
-      - expploitation
-      - smb
-    action: use coldheart
-  - name: wrydame
-    kind: tool
-    category: reporting
-    desc: Reporting framework
-    tags:
-      - reporting
-      - report
-    action: use wrydame

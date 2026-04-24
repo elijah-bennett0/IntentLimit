@@ -9,7 +9,7 @@ def angr_fuzz(handler, params):
 	base_addr  = int(params["base"], 16)
 	solve_addr = int(params["solve"], 16)
 	avoid_addr = int(params["avoid"], 16)
-	FLAG_SIZE  = params["flagsize"] if params["flagsize"] is not 'None' else 32
+	FLAG_SIZE  = params["flagsize"] if params["flagsize"] != 'None' else 32
 
 	handler.Print('i', "Fuzzing binary...\n")
 

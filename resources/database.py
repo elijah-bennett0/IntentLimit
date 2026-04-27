@@ -1,88 +1,102 @@
-# -*- coding: utf-8 -*-
-"""
-MIT License
-
-Copyright (c) 2023 Elijah Bennett (Ginsu)
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-
-@Description		: Creates initial search index at startup
-@Author			: Ginsu
-@Date			: 20260130
-"""
-
-### Imports
 from pathlib import Path
 from ruamel.yaml import YAML
 from integrityCheck import readConfig
-###
+import re
 
 __all__ = []
 
-# Name the main function the same name as the file
-### Code:
+def safe_list(x):
+    if not x:
+        return []
+    if isinstance(x, list):
+        return [str(i).lower() for i in x]
+    return [str(x).lower()]
+
 def createDB(TOOL_DIR, PLUGIN_DIR):
-	'''
-1. check if index.yaml exists in /resources
-2. if not, create it
+    yaml = YAML()
+    yaml.indent(mapping=2, sequence=4, offset=2)
 
-Format:
+    db = {"items": []}
 
-items:
+    # tools
+    tools = Path(TOOL_DIR)
+    if tools.exists():
+        for category in tools.iterdir():
+            if not category.is_dir():
+                continue
+            for tool_dir in category.iterdir():
+                if not tool_dir.is_dir():
+                    continue
+                cfg_path = tool_dir / "config.yaml"
+                if not cfg_path.exists():
+                    continue
+                try:
+                    cfg = readConfig(cfg_path)
+                    db["items"].append({
+                        "name": str(cfg.get("name", tool_dir.name)).lower(),
+                        "kind": str(cfg.get("kind", "tool")).lower(),
+                        "category": str(cfg.get("type", category.name)).lower(),
+                        "desc": str(cfg.get("description", "")),
+                        "tags": safe_list(cfg.get("tags", [])),
+                        "action": f"use {str(cfg.get('name', tool_dir.name)).lower()}"
+                    })
+                except Exception:
+                    pass
 
-    - name: item name
-      kind: touch or exploit or tool etc
-      desc: ...
-      tags: [..,..,..]
-      action: "use tool"
-	'''
-	yaml = YAML()
-	yaml.indent(mapping=2, sequence=4, offset=2)
+    # plugins
+    plugins = Path(PLUGIN_DIR)
+    if plugins.exists():
+        for plug_dir in plugins.iterdir():
+            if not plug_dir.is_dir() or plug_dir.name.startswith("_"):
+                continue
+            cfg_path = plug_dir / "config.yaml"
+            if not cfg_path.exists():
+                continue
+            try:
+                cfg = readConfig(cfg_path)
+                name = str(cfg.get("name", plug_dir.name)).lower()
+                cve_id = cfg.get("cve", {}).get("id") if isinstance(cfg.get("cve"), dict) else ""
+                source = cfg.get("source", {})
+                source_text = source.get("nuclei_template", "") if isinstance(source, dict) else ""
 
-	db = {
+                tags = safe_list(cfg.get("tags", []))
+                if cve_id:
+                    tags.append(str(cve_id).lower())
+                if "nuclei" in source_text.lower():
+                    tags.append("nuclei")
 
-		"items": []
+                # derive searchable keywords from nuclei path + nuclei YAML content
+                hay = source_text
+                try:
+                    src_path = Path(source_text)
+                    if src_path.exists():
+                        hay += " " + src_path.read_text(errors="ignore")
+                except Exception:
+                    pass
 
-	}
+                for word in re.split(r"[^a-zA-Z0-9]+", hay.lower()):
+                    if (
+                        len(word) > 2
+                        and not word.isdigit()
+                        and word not in ("http", "https", "cves", "cve", "yaml", "nuclei", "templates", "ginsu", "home")
+                    ):
+                        tags.append(word)
 
-	tools = Path(TOOL_DIR) # probably make a combined tool/plugin dir to iterate and index both
-	for category in tools.iterdir():
-		for tool_dir in category.iterdir():
-			if not tool_dir.is_dir():
-				continue
+                desc = str(cfg.get("description", ""))
+                if cve_id and cve_id not in desc:
+                    desc = f"{cve_id}: {desc}"
 
-			cfg_path = tool_dir / "config.yaml"
-			cfg = readConfig(cfg_path)
-			db["items"].append({
-				"name": cfg["name"].lower(),
-				"kind": cfg["kind"].lower(),
-				"category": cfg["type"].lower(),
-				"desc": cfg["description"],
-				"tags": cfg["tags"],
-				"action": f"use {cfg['name'].lower()}"
-			})
+                db["items"].append({
+                    "name": name,
+                    "kind": str(cfg.get("kind", "plugin")).lower(),
+                    "category": str(cfg.get("type", "plugin")).lower(),
+                    "desc": desc,
+                    "tags": sorted(set(tags)),
+                    "action": f"use {name}"
+                })
+            except Exception:
+                pass
 
-	db_path = tools.parent / "resources/database.yaml"
-	with open(db_path, 'w') as f:
-		yaml.dump(db, f)
-
-###
-
-if __name__ == "__main__":
-	createDB()
+    db_path = tools.parent / "resources/database.yaml"
+    with open(db_path, "w") as f:
+        yaml.dump(db, f)

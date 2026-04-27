@@ -352,26 +352,68 @@ class ILCMD(cmd.Cmd):
 	def do_search(self, term):
 		"""Show related matches to a specified term"""
 		try:
-			cfg = readConfig(self.baseDir + "/resources/database.yaml") # {'items':[whole config here]}
-			tokens = [t for t in term.split() if t]
-			patterns = [re.compile(rf"^{re.escape(t)}", re.IGNORECASE) for t in tokens] # list comprehension of re patterns from tokens
-			results = []
+			cfg = readConfig(self.baseDir + "/resources/database.yaml")
+			tokens = [t.lower() for t in term.split() if t.strip()]
+			if not tokens:
+				self.help_search()
+				return
 
-			items = cfg.get("items")
-			for item in items:
-				name, kind, cat, tags = str(item.get("name")), str(item.get("kind")), str(item.get("category")), item.get("tags")
-				for pat in patterns:
-					if (pat.match(name) or pat.match(kind) or pat.match(cat) or any(pat.match(str(tag)) for tag in tags)):
-						results.append(item)
-						break
-			if results:
-				for result in results:
-					self.io.Print('s', f"{result['name']} [{result['kind']}] ({result['category']}) - {result['desc']}")
-			else:
+			def norm(x):
+				return str(x).lower().replace("_", " ").replace("-", " ")
+
+			results = []
+			for item in cfg.get("items", []):
+				fields = [
+					item.get("name", ""),
+					item.get("kind", ""),
+					item.get("category", ""),
+					item.get("desc", ""),
+					item.get("action", ""),
+					" ".join(str(t) for t in item.get("tags", []) or []),
+				]
+				if all(norm(t) in norm(" ".join(fields)) for t in tokens):
+					results.append(item)
+
+			if not results:
 				self.io.Print('f', f"No results for {term}")
+				return
+
+			self.io.Print('i', f"Search: {term}")
+			self.io.Print('i', f"Matches: {len(results)}")
+			print()
+			print("    ID               Sev        Product              Summary")
+			print("    ----------------------------------------------------------------------")
+
+			for result in results[:50]:
+				name = str(result.get("name", ""))[:16].ljust(16)
+				desc = str(result.get("desc", "")).replace("\n", " ")
+				sev = "INFO"
+				for x in ("CRITICAL", "HIGH", "MEDIUM", "LOW"):
+					if x.lower() in desc.lower():
+						sev = x
+						break
+
+				product = "Unknown"
+				for x in ("Apache Log4j", "Apache ActiveMQ", "Apache", "WordPress", "phpMyAdmin", "Tomcat", "Jenkins", "Drupal", "Fortinet", "Cisco"):
+					if x.lower() in desc.lower():
+						product = x
+						break
+
+				summary = desc.split(":", 1)[-1].strip()
+				if len(summary) > 150:
+					summary = summary[:97] + "..."
+
+				self.io.Print('s', f"{name} {sev.ljust(10)} {product[:20].ljust(20)} {summary}")
+
+			if len(results) > 50:
+				self.io.Print('w', f"Showing 50 of {len(results)} results. Refine your search.")
+
+			print()
+			self.io.Print('i', "use <id>   info <id>")
+			print()
 
 		except Exception as e:
-			self.io.Print('f', "Something went wrong... report to author:", e)
+			self.io.Print('f', f"Something went wrong... report to author: {e}")
 
 	def do_searchui(self, term):
 		"""Planning to use ncurses and C to show a graphical UI searching function"""

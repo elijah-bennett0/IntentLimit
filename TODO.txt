@@ -14,6 +14,8 @@ test
 14. Search function will use a separate index.yaml that is populated at startup and contains metadata/tags 
 	to ensure the search function is quick. Need to add tags field to each config.yaml with search terms 
 
+15. FIX SEARCH. DOESNT SEARCH DEEP ENOUGH
+
 Coldheart:
 	should have windows specific techniques:
 		windows smb exploits:

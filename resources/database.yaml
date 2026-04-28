@@ -1,12 +1,4 @@
 items:
-  - name: wrydame
-    kind: tool
-    category: reporting
-    desc: Reporting framework
-    tags:
-      - reporting
-      - report
-    action: use wrydame
   - name: happybond
     kind: tool
     category: post
@@ -22,56 +14,6 @@ items:
     tags:
       - osint
     action: use piercingeye
-  - name: shallowdawn
-    kind: tool
-    category: reverse shell
-    desc: Reverse shell framework
-    tags:
-      - reverse
-      - shell
-      - reverseshell
-    action: use shallowdawn
-  - name: goldenbullet
-    kind: tool
-    category: exploitation
-    desc: General Exploitation Techniques
-    tags:
-      - general
-      - exploitation
-    action: use goldenbullet
-  - name: coldheart
-    kind: tool
-    category: exploitation
-    desc: Windows SMB Exploitation Techniques
-    tags:
-      - microsoft
-      - windows
-      - exploit
-      - expploitation
-      - smb
-    action: use coldheart
-  - name: crazyingrate
-    kind: tool
-    category: exploitation
-    desc: Linux exploitation framework
-    tags:
-      - linux
-      - exploitation
-    action: use crazyingrate
-  - name: convenejudgement
-    kind: tool
-    category: recon
-    desc: Recon framework
-    tags:
-      - recon
-    action: use convenejudgement
-  - name: mistyrelay
-    kind: tool
-    category: modeling
-    desc: Modeling framework
-    tags:
-      - modeling
-    action: use mistyrelay
   - name: spiffyspark
     kind: tool
     category: analysis
@@ -87,42 +29,100 @@ items:
       - analysis
       - debugger
     action: use krakentrap
-  - name: pack_cap
-    kind: plugin
-    category: plugin
-    desc: Generic Small Tools For Quick Tasks
-    tags: []
-    action: use pack_cap
-  - name: sweep
-    kind: plugin
-    category: plugin
-    desc: Generic Small Tools For Quick Tasks
-    tags: []
-    action: use sweep
-  - name: dorker
-    kind: plugin
-    category: plugin
-    desc: Generic Small Tools For Quick Tasks
-    tags: []
-    action: use dorker
-  - name: msf_basic
-    kind: plugin
-    category: plugin
-    desc: Generic Small Tools For Quick Tasks
-    tags: []
-    action: use msf_basic
+  - name: crazyingrate
+    kind: tool
+    category: exploitation
+    desc: Linux exploitation framework
+    tags:
+      - linux
+      - exploitation
+    action: use crazyingrate
+  - name: coldheart
+    kind: tool
+    category: exploitation
+    desc: Windows SMB Exploitation Techniques
+    tags:
+      - microsoft
+      - windows
+      - exploit
+      - expploitation
+      - smb
+    action: use coldheart
+  - name: goldenbullet
+    kind: tool
+    category: exploitation
+    desc: General Exploitation Techniques
+    tags:
+      - general
+      - exploitation
+    action: use goldenbullet
+  - name: mistyrelay
+    kind: tool
+    category: modeling
+    desc: Modeling framework
+    tags:
+      - modeling
+    action: use mistyrelay
+  - name: shallowdawn
+    kind: tool
+    category: reverse shell
+    desc: Reverse shell framework
+    tags:
+      - reverse
+      - shell
+      - reverseshell
+    action: use shallowdawn
+  - name: wrydame
+    kind: tool
+    category: reporting
+    desc: Reporting framework
+    tags:
+      - reporting
+      - report
+    action: use wrydame
+  - name: convenejudgement
+    kind: tool
+    category: recon
+    desc: Recon framework
+    tags:
+      - recon
+    action: use convenejudgement
   - name: angr_fuzz
     kind: plugin
     category: plugin
     desc: Small angr script for reversing
     tags: []
     action: use angr_fuzz
+  - name: dorker
+    kind: plugin
+    category: plugin
+    desc: Generic Small Tools For Quick Tasks
+    tags: []
+    action: use dorker
+  - name: sweep
+    kind: plugin
+    category: plugin
+    desc: Generic Small Tools For Quick Tasks
+    tags: []
+    action: use sweep
+  - name: pack_cap
+    kind: plugin
+    category: plugin
+    desc: Generic Small Tools For Quick Tasks
+    tags: []
+    action: use pack_cap
   - name: bin_analysis
     kind: plugin
     category: plugin
     desc: Generic Small Tools For Quick Tasks
     tags: []
     action: use bin_analysis
+  - name: msf_basic
+    kind: plugin
+    category: plugin
+    desc: Generic Small Tools For Quick Tasks
+    tags: []
+    action: use msf_basic
   - name: tunnel
     kind: plugin
     category: plugin

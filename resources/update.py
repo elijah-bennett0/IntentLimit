@@ -16,8 +16,12 @@ def checkUpdate(il):
 	vfile = Path(il.baseDir) / "config.yaml"
 	config = yaml.safe_load(vfile.read_text(encoding="utf-8"))
 	LOCAL_VER = str(config["version"])
-	r = requests.get(VERSION_URL, timeout=15)
-	r.raise_for_status()
+	try:
+		r = requests.get(VERSION_URL, timeout=15)
+		r.raise_for_status()
+	except requests.RequestException as e:
+		il.io.Print('w', f"Update check skipped: {e}")
+		return
 	remote_config = yaml.safe_load(r.text)
 	REMOTE_VER = str(remote_config["version"])
 	INSTALL_DIR = Path(il.baseDir)

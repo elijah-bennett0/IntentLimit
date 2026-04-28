@@ -139,7 +139,11 @@ class ToolCtx(CmdCtx):
 
 	def do_set(self, arg):
 		"""Set a specified parameter."""
-		name, value = arg.split(' ') # could make more robust later
+		args = arg.strip().split(None, 1)
+		if len(args) < 2:
+			self.io.Print('f', "Not enough arguments!")
+			return
+		name, value = args
 		self.options[name] = value
 		#print(self.options)
 
@@ -151,25 +155,52 @@ class ToolCtx(CmdCtx):
 		specs = getattr(self.__class__, "CMD_SPECS", {})
 		if not specs:
 			self.io.Print('w', "No options for this context!")
+			return
+
+		print(f"\n{self.getName()} commands\n")
+		seen_param_sets = {}
 		for cmd_name, cmd_spec in specs.items():
-			print(f"\nCommand: {cmd_name}")
+			print(cmd_name)
+
+			doc = getattr(getattr(self, f"do_{cmd_name}", None), "__doc__", "")
+			if doc:
+				print(f"  {doc.strip()}")
+
 			params = cmd_spec.get("params", {})
 			if not params:
+				print()
 				continue
 
-			for param_name, info in params.items():
-				ptype = info.get("type", "str")
-				required = "required" if info.get("required") else "optional"
-				desc = info.get("desc", "")
-				opts = info.get("opts") if info.get("opts") else None
+			param_key = tuple(
+				(param_name, tuple(sorted((info or {}).items())))
+				for param_name, info in params.items()
+			)
+			if param_key in seen_param_sets:
+				print(f"  Same parameters as {seen_param_sets[param_key]}.\n")
+				continue
+			seen_param_sets[param_key] = cmd_name
 
-				# main line for the param
-				print(f"  Param: {param_name} ({ptype}, {required})")
-				# optional description on its own indented line
-				if desc:
-					print(f"    Desc: {desc}\n")
-				if opts:
-					print(f"    Options: {opts}\n")
+			required_params = {
+				name: info for name, info in params.items()
+				if info.get("required")
+			}
+			optional_params = {
+				name: info for name, info in params.items()
+				if not info.get("required")
+			}
+
+			for label, group in (("Required", required_params), ("Optional", optional_params)):
+				if not group:
+					continue
+				print(f"  {label}:")
+				name_width = max(len(name) for name in group)
+				for param_name, info in group.items():
+					desc = info.get("desc") or info.get("type", "str")
+					opts = info.get("opts") if info.get("opts") else None
+					if opts:
+						desc = f"{desc} Options: {opts}"
+					print(f"    {param_name:<{name_width}}  {desc}")
+				print()
 
 
 class PluginCtx(CmdCtx):

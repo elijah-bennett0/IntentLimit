@@ -429,6 +429,8 @@ class ILCMD(cmd.Cmd):
 
 	def do_info(self, name):
 		"""Show Information About A Tool Or Plugin"""
+		if name.lower().replace("-", "_").startswith("cve_") and self.info_cve(name):
+			return
 		if name in loadedTools:
 			path = loadedTools[name][1]
 			config = readConfig(path)
@@ -493,6 +495,59 @@ class ILCMD(cmd.Cmd):
 		else:
 			self.help_info()
 
+	def info_cve(self, name):
+		cve_name = name.lower().replace("-", "_")
+		found = False
+
+		for tool_key, (func, cfg_path) in loadedTools.items():
+			tool_dir = os.path.dirname(cfg_path)
+			cve_cfg_path = os.path.join(tool_dir, "exploits", cve_name, "config.yaml")
+			if not os.path.exists(cve_cfg_path):
+				continue
+
+			found = True
+			config = readConfig(cve_cfg_path)
+			cve = config.get("cve", {}) if isinstance(config.get("cve", {}), dict) else {}
+			cvss = cve.get("cvss", {}) if isinstance(cve.get("cvss", {}), dict) else {}
+			cve_id = cve.get("id", cve_name.replace("_", "-").upper())
+			description = str(config.get("description", "")).strip()
+			if description.lower().startswith(str(cve_id).lower() + ":"):
+				description = description.split(":", 1)[1].strip()
+
+			weak = (
+				not description
+				or description.lower().startswith("id for ")
+				or " detector" in description.lower()
+				or " affected product " in description.lower()
+			)
+			if weak:
+				description = " ".join(str(cve.get("nvd_description", "")).split())
+				sentences = re.split(r"(?<=[.!?])\s+", description)
+				for sentence in sentences:
+					if any(word in sentence.lower() for word in ("vulnerable", "allows", "allowing", "remote attacker", "directory traversal", "path traversal", "remote code execution", "information disclosure", "sql injection", "cross-site scripting")):
+						description = sentence.strip()
+						break
+
+			for idx, char in enumerate(description):
+				if char in ".!?" and (idx == len(description) - 1 or description[idx + 1].isspace()):
+					description = description[:idx + 1]
+					break
+			if not description:
+				description = "(no description)"
+
+			tool = config.get("tool") or tool_key
+			severity = cvss.get("severity", "UNKNOWN")
+			score = cvss.get("score", "?")
+
+			print()
+			self.io.Print('i', f"{cve_id} [{severity} {score}]")
+			self.io.Print('i', f"Tool: {tool}")
+			self.io.Print('i', f"{description}")
+			print()
+			break
+
+		return found
+
 	def parseLine(self, line):
 		line = line.strip()
 		if not line:
@@ -543,5 +598,3 @@ class ILCMD(cmd.Cmd):
 if __name__ == "__main__":
 	il = ILCMD()
 	il.cmdloop()
-
-

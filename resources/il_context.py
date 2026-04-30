@@ -112,6 +112,8 @@ class CmdCtx(cmd.Cmd):
 				attrs[f"do_{cmd_name}"] = func # {"do_test":<func test>}
 
 			attrs["CMD_SPECS"] = command_specs
+			attrs["TOOL_DIR"] = str(tool_dir)
+			attrs["EXPLOITS_DIR"] = str(tool_dir / "exploits")
 		except:
 			self.io.Print('f', "No commands found for tool.")
 
@@ -139,25 +141,116 @@ class ToolCtx(CmdCtx):
 
 	def do_set(self, arg):
 		"""Set a specified parameter."""
+		if not hasattr(self, "options"):
+			self.options = {}
 		args = arg.strip().split(None, 1)
 		if len(args) < 2:
 			self.io.Print('f', "Not enough arguments!")
 			return
 		name, value = args
+		if name == "exploit":
+			cve_name, cve_config = self.get_selected_cve_config(value)
+			if cve_name and cve_config is None:
+				self.io.Print('f', f"Unknown CVE for this tool: {cve_name}")
+				return
+			value = cve_name
 		self.options[name] = value
+		if name == "exploit" and value:
+			self.io.Print('i', f"Selected {value}. Run options to view CVE-specific params.")
 		#print(self.options)
+
+	def normalize_cve_name(self, name):
+		value = str(name or "").strip().lower().replace("-", "_")
+		if value.startswith("cve_"):
+			return value
+		if value.startswith("cve"):
+			return "cve_" + value[3:].lstrip("_")
+		return value
+
+	def get_selected_cve_config(self, cve_name=None):
+		options = getattr(self, "options", {})
+		cve_name = self.normalize_cve_name(cve_name or options.get("exploit"))
+		if not cve_name:
+			return None, None
+
+		exploits_dir = getattr(self.__class__, "EXPLOITS_DIR", None)
+		if not exploits_dir:
+			return cve_name, None
+
+		cfg_path = Path(exploits_dir) / cve_name / "config.yaml"
+		if not cfg_path.exists():
+			return cve_name, None
+
+		return cve_name, readConfig(str(cfg_path))
 
 	def help_options(self):
 		print("TEST")
 
 	def do_options(self, arg):
 		"""Show context specific commands and params."""
-		specs = getattr(self.__class__, "CMD_SPECS", {})
+		if not hasattr(self, "options"):
+			self.options = {}
+		cve_name, cve_config = self.get_selected_cve_config()
+		if cve_name and cve_config:
+			specs = cve_config.get("commands", {})
+		else:
+			specs = getattr(self.__class__, "CMD_SPECS", {})
 		if not specs:
 			self.io.Print('w', "No options for this context!")
 			return
 
-		print(f"\n{self.getName()} commands\n")
+		if cve_name and cve_config:
+			print(f"\n{self.getContext().getName()} selected CVE: {cve_name}\n")
+			print("Commands:")
+			for cmd_name, cmd_spec in specs.items():
+				enabled = cmd_spec.get("enabled")
+				if enabled is False:
+					print(f"  {cmd_name} (disabled)")
+				else:
+					print(f"  {cmd_name}")
+			print()
+
+			params = {}
+			for cmd_spec in specs.values():
+				for param_name, info in cmd_spec.get("params", {}).items():
+					params.setdefault(param_name, info)
+
+			if not params:
+				return
+
+			required_params = {
+				name: info for name, info in params.items()
+				if info.get("required")
+			}
+			optional_params = {
+				name: info for name, info in params.items()
+				if not info.get("required")
+			}
+
+			for label, group in (("Required", required_params), ("Optional", optional_params)):
+				if not group:
+					continue
+				print(f"{label}:")
+				name_width = max(len(name) for name in group)
+				for param_name, info in group.items():
+					desc = info.get("desc") or info.get("type", "str")
+					opts = info.get("opts") if info.get("opts") else None
+					if opts:
+						desc = f"{desc} Options: {opts}"
+					current = self.options.get(param_name)
+					default = info.get("default") if "default" in info else None
+					if current is not None:
+						desc = f"{desc} Current: {current}"
+					elif default is not None:
+						desc = f"{desc} Default: {default}"
+					print(f"  {param_name:<{name_width}}  {desc}")
+				print()
+			return
+		elif cve_name:
+			self.io.Print('w', f"Selected CVE config not found: {cve_name}")
+			print(f"\n{self.getContext().getName()} commands\n")
+		else:
+			print(f"\n{self.getContext().getName()} commands\n")
 		seen_param_sets = {}
 		for cmd_name, cmd_spec in specs.items():
 			print(cmd_name)
@@ -172,7 +265,7 @@ class ToolCtx(CmdCtx):
 				continue
 
 			param_key = tuple(
-				(param_name, tuple(sorted((info or {}).items())))
+				(param_name, repr(info or {}))
 				for param_name, info in params.items()
 			)
 			if param_key in seen_param_sets:
@@ -199,6 +292,12 @@ class ToolCtx(CmdCtx):
 					opts = info.get("opts") if info.get("opts") else None
 					if opts:
 						desc = f"{desc} Options: {opts}"
+					current = self.options.get(param_name)
+					default = info.get("default") if "default" in info else None
+					if current is not None:
+						desc = f"{desc} Current: {current}"
+					elif default is not None:
+						desc = f"{desc} Default: {default}"
 					print(f"    {param_name:<{name_width}}  {desc}")
 				print()
 

@@ -47,3 +47,6 @@ GoldenBullet:
 CrazyIngrate:
 	linux/unix exploits:
 		nothing yet.
+
+
+GOAL END OF JUNE: Make IntentLimit packet-ready: README screenshots, architecture diagram, install docs, examples, plugin docs, tests, demo GIF.

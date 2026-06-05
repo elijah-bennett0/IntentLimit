@@ -100,7 +100,7 @@ class Manager():
 						except Exception as e:
 							self.handler.Print('f', "Could Not Load: %s" % name)
 							self.handler.Print('c', str(e))
-		self.handler.Print('s', "Loaded {} tool(s)\n".format(len(loadedTools)))
+		self.handler.Print('s', "Loaded {} tool(s)".format(len(loadedTools)))
 
 	def createPlugin(self, arg):
 		'''

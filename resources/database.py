@@ -40,10 +40,10 @@ def ensureDB(TOOL_DIR, PLUGIN_DIR, RESOURCE_DIR, il):
 		createDB(TOOL_DIR, PLUGIN_DIR, RESOURCE_DIR, il)
 		hashFile.write_text(currentHash)
 
+	il.io.Print('s', "Database check good.\n")
+
+
 def createDB(TOOL_DIR, PLUGIN_DIR, RESOURCE_DIR, il):
-
-	db = RESOURCE_DIR
-
 	il.io.Print('i', "Creating database...")
 	yaml = YAML()
 	yaml.indent(mapping=2, sequence=4, offset=2)

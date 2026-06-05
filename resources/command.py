@@ -352,6 +352,7 @@ class ILCMD(cmd.Cmd):
 	def do_search(self, term):
 		"""Show related matches to a specified term"""
 		try:
+			# BUG. Only searches this specific database
 			cfg = readConfig(self.baseDir + "/resources/database.yaml")
 			tokens = [t.lower() for t in term.split() if t.strip()]
 			if not tokens:

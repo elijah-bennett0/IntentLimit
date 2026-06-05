@@ -61,7 +61,7 @@ from ilcmd import *
 from update import *
 from iohandler import *
 from pluginManager import *
-from database import createDB
+from database import ensureDB
 ###
 
 ### Code
@@ -90,7 +90,7 @@ def run(config, ildir):
 	il = IntentLimit(config, ildir, PLUGIN_DIR, TOOL_DIR)
 	checkUpdate(il)
 	loadAll(il)
-	createDB(TOOL_DIR, PLUGIN_DIR)
+	ensureDB(TOOL_DIR, PLUGIN_DIR, RESOURCE_DIR, il)
 	main(il)
 ###
 

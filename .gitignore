@@ -1,3 +1,5 @@
+tree.txt
+
 .idea/
 
 # Byte-compiled / optimized / DLL files
@@ -165,3 +167,4 @@ cython_debug/
 testing/
 *.bak
 .codex
+*.hash

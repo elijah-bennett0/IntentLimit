@@ -27,8 +27,9 @@ def ensureDB(TOOL_DIR, PLUGIN_DIR, RESOURCE_DIR, il):
 	'''This will check the stored hash to current calc hash and detect change'''
 	currentHash = calcHash(TOOL_DIR, PLUGIN_DIR)
 	hashFile = Path(RESOURCE_DIR) / "database.hash"
+	db = Path(RESOURCE_DIR) / "database.yaml"
 
-	if not hashFile.exists():
+	if not hashFile.exists() or not db.exists():
 		il.io.Print('i', "Hashfile not detected, generating hash and database...")
 		createDB(TOOL_DIR, PLUGIN_DIR, RESOURCE_DIR, il)
 		hashFile.write_text(currentHash)
